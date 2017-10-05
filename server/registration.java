@@ -1,4 +1,4 @@
-package cs3337group3.servlet;
+package server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
