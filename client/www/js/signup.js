@@ -20,4 +20,4 @@ function showSecondPage() {
 function showThirdPage() {
 	document.getElementById('secondPage').style.display = 'none';
 	document.getElementById('thirdPage').style.display = 'block';
-} 
+}
