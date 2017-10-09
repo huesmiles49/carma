@@ -7,21 +7,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- libraries -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
         crossorigin="anonymous">
-    <link rel="stylesheet" href="css/main.css">
+    <script src="js/jquery-3.2.1.js"></script>
+
+    <!-- importing files -->
     <script src="js/reserver-home.js"></script>
     <script src="js/serverinterface.js"></script>
+    <link rel="stylesheet" href="css/reserver-home.css">
+
+    <!-- window.onload will load the list of spots into a table -->
     <script>
         window.onload = getList;
     </script>
-    <title>Reserve Home</title>
+    <title>Reserver Home</title>
 </head>
 
 <body>
+    <h2>Reserve a Spot</h2>
     <div class="container">
         <div id="reserver-table">
-            <table class="table">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>Location</th>
@@ -32,7 +40,6 @@
                 <tbody id="reserve-table-row">
                 </tbody>
             </table>
-
         </div>
     </div>
 </body>

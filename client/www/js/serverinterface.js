@@ -1,12 +1,13 @@
-/** This file will have all the connections needed to send/receive data from the server. */
+// This file will have all the connections needed to send/receive data from the server.
 
-/* The server address, change this to the webserver you want to use */
+// The server address, change this to the webserver you want to use
 var server = "http://localhost:8080/";
 
-/** TODO: add a return function, maybe start tracking userID */
+// TODO: add a return function to track userID
 
 /** Send registration JSON to server with XMLHTTPRequest
- * @param JSON, the JSON to pass to the server */
+ * @param JSON, the JSON to pass to the server
+ */
 function sendRegistration(newUser) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.open("POST", server + "/cs3337group3/registration", true);
@@ -14,7 +15,7 @@ function sendRegistration(newUser) {
 	xhttp.send(newUser);
 }
 
-/** Check if server is OK, then request server for the JSON array of all parking spots*/
+// Checks if server is OK, then request server for the JSON array of all parking spots
 function getList() {
 	var xhttp;
 	xhttp = new XMLHttpRequest();
@@ -27,11 +28,3 @@ function getList() {
 	xhttp.open("GET", server + "/cs3337group3/listParkingSpots", true);
 	xhttp.send();
 }
-
-/** Packaged user_id that wants to reserve and prepare to send to server */
-// function sendID(reservedSpot) {
-// 	var xhttp = new XMLHttpRequest();
-// 	xhttp.open();
-// 	xhttp.setRequestHeader();
-// 	xhttp.send(listOfSpots["user-id"]);
-// }

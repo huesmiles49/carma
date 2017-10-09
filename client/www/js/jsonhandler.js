@@ -9,7 +9,6 @@ function convertFormToJSON(formName) {
 	var myForm = document.getElementById(formName);
 	var formData = new FormData(myForm),
 		result = {};
-
 	for (var entry of formData.entries()) {
 		result[entry[0]] = entry[1];
 	}
