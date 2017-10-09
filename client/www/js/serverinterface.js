@@ -9,13 +9,26 @@ var server="http://localhost:8080";
 
 /**
  * Send registration JSON to server with XMLHTTPRequest
- * @param JSON, the JSON to pass to the server
+ * @param userData, the JSON to pass to the server
  * @returns
  * TODO: add a return function, maybe start tracking userID
  */
-function sendRegistration(JSON) {
+function sendRegistration(userData) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.open("POST", server + "/cs3337group3/registration", true);
 	xhttp.setRequestHeader("Content-type", "application/json");
-	xhttp.send(JSON);
+	xhttp.send(userData);
+}
+
+/**
+ * Send login JSON to server with XMLHTTPRequest
+ * @param userData, the JSON to pass to the server
+ * @returns
+ * TODO: add a return function, maybe start tracking userID
+ */
+function sendLogin(userData) {
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("POST", server + "/cs3337group3/login", true);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	xhttp.send(userData);
 }
