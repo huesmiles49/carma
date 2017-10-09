@@ -2,9 +2,11 @@ package cs3337group3.servlet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.ServletConfig;
@@ -102,10 +104,14 @@ public class registration extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         JSONParser parser = new JSONParser();
+        JSONObject returnValues = new JSONObject();
         
         String url = "jdbc:mysql://localhost/cs3337group3";
         String username = "cs3337";
         String password = "csula2017";
+        
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
         
         String FName = "", LName = "", Email = "", Pass = "";
         String Make = "", Model = "", Color ="", License = "", State ="";
@@ -153,6 +159,27 @@ public class registration extends HttpServlet {
 	        insertCars.setString(6, State);
 	        
 	        insertCars.executeUpdate();
+	        
+	        PreparedStatement getUserID = c.prepareStatement("select ID from Users where Email=?");
+	        getUserID.setString(1, Email);
+	        
+	        PreparedStatement getUserCar = c.prepareStatement("select ID from Users_Cars where User_ID=(select ID from Users where Email=?)");
+	        getUserCar.setString(1, Email);
+	        
+	        ResultSet UserResults = getUserID.executeQuery();
+	        
+	        if(UserResults.next()) {
+	        	returnValues.put("id", UserResults.getString("ID"));
+	        }
+	        
+	        ResultSet CarResults = getUserCar.executeQuery();
+	        
+	        if(CarResults.next()) {
+	        	returnValues.put("car", CarResults.getString("ID"));
+	        }
+	        
+	        out.println(returnValues.toJSONString());
+
 	    }
 	    catch( SQLException e )
 	    {
