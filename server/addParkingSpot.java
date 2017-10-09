@@ -104,6 +104,5 @@ public class addParkingSpot extends HttpServlet {
 	    	throw new ServletException( e );
 	    }
 	}
-	}
-
 }
+
