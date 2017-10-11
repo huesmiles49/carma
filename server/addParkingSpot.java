@@ -68,15 +68,17 @@ public class addParkingSpot extends HttpServlet {
         
         int userID = 0, userCar = 0;
         String location = "";
-        String timeSwap = "";
+        String timeSwap = "Now";
         String comment = "";
+        String level = "";
         
         /* to do: add check for cookie to get user id */
         
         try {
 			JSONObject data = (JSONObject) parser.parse(request.getReader());
 			location = (String) data.get("location");
-			timeSwap = (String) data.get("timeSwap");
+			level = (String) data.get("level");
+			//timeSwap = (String) data.get("timeSwap");
 			comment = (String) data.get("comment");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -91,7 +93,7 @@ public class addParkingSpot extends HttpServlet {
 	        
 	        insertSpot.setInt(1, userID);
 	        insertSpot.setInt(2, userCar);
-	        insertSpot.setString(3,  location);
+	        insertSpot.setString(3,  location + ", " + level);
 	        insertSpot.setString(4, (new Date().toString()));
 	        insertSpot.setString(5, timeSwap);
 	        insertSpot.setString(5, comment);
