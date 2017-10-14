@@ -135,6 +135,9 @@ public class login extends HttpServlet {
 			PreparedStatement selectPassword  = c.prepareStatement(
 					"select Pass, ID from Users where Email=?");
 
+			PreparedStatement getUserCar = c.prepareStatement(
+				    "select ID from Users_Cars where User_ID=?");
+					
 			selectPassword.setString(1, reqEmail);
 
 			ResultSet rsPassword = selectPassword.executeQuery();
@@ -142,11 +145,19 @@ public class login extends HttpServlet {
 			if(rsPassword.next()) {
 				String comparePassword = rsPassword.getString(1);
 				int id = rsPassword.getInt(2);
+
 				if(comparePassword.equals(reqPassword)) {
-					JSONObject json = new JSONObject();
-					json.put("id", new Integer(id));
+					getUserCar.setInt(1, id);
+
+					ResultSet CarResults = getUserCar.executeQuery();
 					
-					out.println(json.toJSONString());
+					JSONObject returnValues = new JSONObject();
+					returnValues.put("id", new Integer(id));
+
+					if(CarResults.next()) {
+						returnValues.put("car", CarResults.getString("ID"));
+					}
+					out.println(returnValues.toJSONString());
 				}
 						
 			}
