@@ -76,7 +76,33 @@ public class listParkingSpots extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		doGet(request, response);
+		try {
+			String url = "jdbc:mysql://localhost/cs3337group3";
+			String username = "cs3337";
+			String password = "csula2017";
+			
+			int userID = 0, userCar = 0;
+			int spotID = 0;
+	
+			response.setContentType("application/json");
+			PrintWriter out = response.getWriter();
+			
+			Connection c = DriverManager.getConnection(url, username, password);
+	
+			PreparedStatement insertReservation = c.prepareStatement(
+					"insert into Reservations(Spot_ID,Reserver_ID,Reserver_Car) values (?, ?, ?)");
+		    
+			/* TODO: get spotID from parameter? and user info from cookie */
+			
+			insertReservation.setInt(1, spotID);
+		    insertReservation.setInt(2, userID);
+		    insertReservation.setInt(3, userCar);
+		    
+		    insertReservation.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new ServletException(e);
+		}
 	}
 
 }
