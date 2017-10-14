@@ -14,8 +14,6 @@ client/*
 !client/www/
 
 
-
-
 #server-side
 !*.java
 !*.SQL
@@ -23,3 +21,6 @@ client/*
 !server/*.xml
 !server/WEB-INF/
 !server/WEB-INF/**
+
+.DS_Store
+client/www/.DS_Store
