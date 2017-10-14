@@ -2,9 +2,11 @@ package server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.ServletConfig;
@@ -75,20 +77,27 @@ public class registration extends HttpServlet {
 		}
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
 
-		JSONParser parser = new JSONParser();
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		String url = "jdbc:mysql://localhost/cs3337group3";
-		String username = "cs3337";
-		String password = "csula2017";
-
-		String FName = "", LName = "", Email = "", Pass = "";
-		String Make = "", Model = "", Color = "", License = "", State = "";
-		int Carma = 1000;
-
-		try {
+        JSONParser parser = new JSONParser();
+        JSONObject returnValues = new JSONObject();
+        
+        String url = "jdbc:mysql://localhost/cs3337group3";
+        String username = "cs3337";
+        String password = "csula2017";
+        
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        
+        String FName = "", LName = "", Email = "", Pass = "";
+        String Make = "", Model = "", Color ="", License = "", State ="";
+        int Carma = 1000;
+        
+        try {
 			JSONObject data = (JSONObject) parser.parse(request.getReader());
 			FName = (String) data.get("firstName");
 			LName = (String) data.get("lastName");
@@ -103,34 +112,60 @@ public class registration extends HttpServlet {
 			// catch block
 			e.printStackTrace();
 		}
-		try {
-			Connection c = DriverManager.getConnection(url, username, password);
 
-			PreparedStatement insertUsers = c
-					.prepareStatement("insert into Users(FName, LName, Email, Pass, Carma)  values(?,?,?,?,?)");
+	    try {
+	        Connection c = DriverManager
+	                .getConnection( url, username, password );
+	        
+	        PreparedStatement insertUsers = c.prepareStatement(
+	                "insert into Users(FName, LName, Email, Pass, Carma)  values(?,?,?,?,?)");
+	        
+	        insertUsers.setString(1, FName);
+	        insertUsers.setString(2, LName);
+	        insertUsers.setString(3,  Email);
+	        insertUsers.setString(4, Pass);
+	        insertUsers.setInt(5, Carma);
+	
+	        insertUsers.executeUpdate();
+	        
+	        PreparedStatement insertCars = c.prepareStatement(
+	        		"insert into Users_Cars(User_ID, Make, Model, Color, License_Plate, Plate_State) "
+	        		           + "values((select ID from Users where Email = ?), ?, ?, ?, ?, ?)");
+	        		           
+	        insertCars.setString(1, Email);
+	        insertCars.setString(2, Make);
+	        insertCars.setString(3, Model);
+	        insertCars.setString(4, Color);
+	        insertCars.setString(5, License);
+	        insertCars.setString(6, State);
+	        
+	        insertCars.executeUpdate();
+	        
+	        PreparedStatement getUserID = c.prepareStatement("select ID from Users where Email=?");
+	        getUserID.setString(1, Email);
+	        
+	        PreparedStatement getUserCar = c.prepareStatement("select ID from Users_Cars where User_ID=(select ID from Users where Email=?)");
+	        getUserCar.setString(1, Email);
+	        
+	        ResultSet UserResults = getUserID.executeQuery();
+	        
+	        if(UserResults.next()) {
+	        	returnValues.put("id", UserResults.getString("ID"));
+	        }
+	        
+	        ResultSet CarResults = getUserCar.executeQuery();
+	        
+	        if(CarResults.next()) {
+	        	returnValues.put("car", CarResults.getString("ID"));
+	        }
+	        
+	        out.println(returnValues.toJSONString());
 
-			insertUsers.setString(1, FName);
-			insertUsers.setString(2, LName);
-			insertUsers.setString(3, Email);
-			insertUsers.setString(4, Pass);
-			insertUsers.setInt(5, Carma);
+	    }
+	    catch( SQLException e )
+	    {
+	    	throw new ServletException( e );
+	    }
 
-			insertUsers.executeUpdate();
-
-			PreparedStatement insertCars = c
-					.prepareStatement("insert into Users_Cars(User_ID, Make, Model, Color, License_Plate, Plate_State) "
-							+ "values((select ID from Users where Email = ?), ?, ?, ?, ?, ?)");
-
-			insertCars.setString(1, Email);
-			insertCars.setString(2, Make);
-			insertCars.setString(3, Model);
-			insertCars.setString(4, Color);
-			insertCars.setString(5, License);
-			insertCars.setString(6, State);
-
-			insertCars.executeUpdate();
-		} catch (SQLException e) {
-			throw new ServletException(e);
-		}
 	}
 }
