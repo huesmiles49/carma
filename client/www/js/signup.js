@@ -1,4 +1,6 @@
-// This file will provide controls for the signup page
+/**
+ * This file will provide controls for the signup page
+ */
 
 /**
  * Expected to be called by the button on the firstPage
@@ -7,7 +9,7 @@
  */
 function showSecondPage() {
     document.getElementById('firstPage').style.display = 'none';
-    document.getElementById('secondPage').style.display = 'block';
+    document.getElementById('secondPage').style.display ='block';
 }
 
 /**
@@ -16,6 +18,6 @@ function showSecondPage() {
  * @returns nothing
  */
 function showThirdPage() {
-    document.getElementById('secondPage').style.display = 'none';
-    document.getElementById('thirdPage').style.display = 'block';
-}
+	document.getElementById('secondPage').style.display = 'none';
+	document.getElementById('thirdPage').style.display = 'block';
+} 

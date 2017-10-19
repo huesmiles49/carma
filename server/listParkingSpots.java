@@ -34,6 +34,11 @@ public class listParkingSpots extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+		ResultSet SpotsResults = null;
+		PreparedStatement getSpots = null;
+		Connection c = null;
+
 		try {
 			String url = "jdbc:mysql://localhost/cs3337group3";
 			String username = "cs3337";
@@ -44,11 +49,11 @@ public class listParkingSpots extends HttpServlet {
 
 			JSONArray arrayJson = new JSONArray();
 
-			Connection c = DriverManager.getConnection(url, username, password);
+			c = DriverManager.getConnection(url, username, password);
 
-			PreparedStatement getSpots = c.prepareStatement("select Lister_ID,Location,Time_Swap,Comment from Spots");
+			getSpots = c.prepareStatement("select Lister_ID,Location,Time_Swap,Comment from Spots");
 
-			ResultSet SpotsResults = getSpots.executeQuery();
+			SpotsResults = getSpots.executeQuery();
 
 			while (SpotsResults.next()) {
 				String currentLocation = SpotsResults.getString("Location");
@@ -70,12 +75,20 @@ public class listParkingSpots extends HttpServlet {
 			out.println(arrayJson.toJSONString());
 		} catch (SQLException e) {
 			throw new ServletException(e);
+		} finally {
+			try { SpotsResults.close(); } catch (Exception e) { /* ignored */ }
+			try { getSpots.close(); } catch (Exception e) { /* ignored */ }
+			try { c.close(); } catch (Exception e) { /* ignored */ }
 		}
 	}
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+		Connection c = null;
+		PreparedStatement insertReservation = null;
+
 		try {
 			String url = "jdbc:mysql://localhost/cs3337group3";
 			String username = "cs3337";
@@ -87,9 +100,9 @@ public class listParkingSpots extends HttpServlet {
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();
 			
-			Connection c = DriverManager.getConnection(url, username, password);
+			c = DriverManager.getConnection(url, username, password);
 	
-			PreparedStatement insertReservation = c.prepareStatement(
+			insertReservation = c.prepareStatement(
 					"insert into Reservations(Spot_ID,Reserver_ID,Reserver_Car) values (?, ?, ?)");
 		    
 			/* TODO: get spotID from parameter? and user info from cookie */
@@ -102,6 +115,10 @@ public class listParkingSpots extends HttpServlet {
 			
 		} catch (SQLException e) {
 			throw new ServletException(e);
+		} finally {
+			//try { SpotsResults.close(); } catch (Exception e) { /* ignored */ }
+			try { insertReservation.close(); } catch (Exception e) { /* ignored */ }
+			try { c.close(); } catch (Exception e) { /* ignored */ }
 		}
 	}
 

@@ -19,9 +19,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-/**
- * Servlet implementation class login
- */
 @WebServlet("/login")
 public class login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -31,27 +28,20 @@ public class login extends HttpServlet {
 	 */
 	public login() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
-	
-    public void init( ServletConfig config ) throws ServletException
-    {
-        super.init( config );
 
-        try
-        {
-            Class.forName( "com.mysql.jdbc.Driver" );
-        }
-        catch( ClassNotFoundException e )
-        {
-            throw new ServletException( e );
-        }
-    }
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			throw new ServletException(e);
+		}
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String url = "jdbc:mysql://localhost/cs3337group3";
 		String username = "cs3337";
 		String password = "csula2017";
@@ -61,110 +51,139 @@ public class login extends HttpServlet {
 
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
-		
-		if(reqEmail == null  || reqPassword == null)
+
+		if (reqEmail == null || reqPassword == null)
 			return;
 
+		Connection c = null;
+		PreparedStatement selectPassword = null;
+		ResultSet rsPassword = null;
 
 		try {
-			Connection c = 
-					DriverManager.getConnection( url, username, password );
+			c = DriverManager.getConnection(url, username, password);
 
-			PreparedStatement selectPassword  = c.prepareStatement(
-					"select Pass, ID from Users where Email=?");
+			selectPassword = c.prepareStatement("select Pass, ID from Users where Email=?");
 
 			selectPassword.setString(1, reqEmail);
 
-			ResultSet rsPassword = selectPassword.executeQuery();
-			
-			if(rsPassword.next()) {
+			rsPassword = selectPassword.executeQuery();
+
+			if (rsPassword.next()) {
 				String comparePassword = rsPassword.getString(1);
 				int id = rsPassword.getInt(2);
-				if(comparePassword.equals(reqPassword)) {
+				if (comparePassword.equals(reqPassword)) {
 					JSONObject json = new JSONObject();
 					json.put("id", new Integer(id));
-					
+
 					out.println(json.toJSONString());
 				}
-						
 			}
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				rsPassword.close();
+			} catch (Exception e) {
+				/* ignored */ }
+			try {
+				selectPassword.close();
+			} catch (Exception e) {
+				/* ignored */ }
+			try {
+				c.close();
+			} catch (Exception e) {
+				/* ignored */ }
 		}
-
-
-
-
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		JSONParser parser = new JSONParser();
-		
+
 		String url = "jdbc:mysql://localhost/cs3337group3";
 		String username = "cs3337";
 		String password = "csula2017";
-		
+
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
-		
+
 		String reqEmail = null, reqPassword = null;
-		
+
 		try {
 			JSONObject data = (JSONObject) parser.parse(request.getReader());
 			reqEmail = (String) data.get("email");
 			reqPassword = (String) data.get("pass");
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		if(reqEmail == null  || reqPassword == null)
+
+		if (reqEmail == null || reqPassword == null)
 			return;
 
-
+		System.out.println(reqEmail + "  " + reqPassword);
+		
+		ResultSet rsPassword = null;
+		ResultSet CarResults = null;
+		Connection c = null;
+		PreparedStatement selectPassword = null;
+		PreparedStatement getUserCar = null;
 		try {
-			Connection c = 
-					DriverManager.getConnection( url, username, password );
+			c = DriverManager.getConnection(url, username, password);
 
-			PreparedStatement selectPassword  = c.prepareStatement(
-					"select Pass, ID from Users where Email=?");
+			selectPassword = c.prepareStatement("select Pass, ID from Users where Email=?");
 
-			PreparedStatement getUserCar = c.prepareStatement(
-				    "select ID from Users_Cars where User_ID=?");
-					
+			getUserCar = c.prepareStatement("select ID from Users_Cars where User_ID=?");
+
 			selectPassword.setString(1, reqEmail);
 
-			ResultSet rsPassword = selectPassword.executeQuery();
-			
-			if(rsPassword.next()) {
+			rsPassword = selectPassword.executeQuery();
+
+			if (rsPassword.next()) {
 				String comparePassword = rsPassword.getString(1);
 				int id = rsPassword.getInt(2);
 
-				if(comparePassword.equals(reqPassword)) {
+				if (comparePassword.equals(reqPassword)) {
 					getUserCar.setInt(1, id);
 
-					ResultSet CarResults = getUserCar.executeQuery();
-					
+					CarResults = getUserCar.executeQuery();
+
 					JSONObject returnValues = new JSONObject();
 					returnValues.put("id", new Integer(id));
 
-					if(CarResults.next()) {
+					if (CarResults.next()) {
 						returnValues.put("car", CarResults.getString("ID"));
 					}
 					out.println(returnValues.toJSONString());
 				}
-						
+
 			}
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				rsPassword.close();
+			} catch (Exception e) {
+				/* ignored */ }
+			try {
+				CarResults.close();
+			} catch (Exception e) {
+				/* ignored */ }
+			try {
+				selectPassword.close();
+			} catch (Exception e) {
+				/* ignored */ }
+			try {
+				getUserCar.close();
+			} catch (Exception e) {
+				/* ignored */ }
+			try {
+				c.close();
+			} catch (Exception e) {
+				/* ignored */ }
 		}
 
 	}

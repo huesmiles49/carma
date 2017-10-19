@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+	    crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+	    crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+	    crossorigin="anonymous" type="text/javascript"></script>
+	<link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
+	<style type="text/css">
+		@import "css/lister.scss";
+	</style>
+	<script src="js/jsonhandler.js"></script>
+	<script src="js/serverinterface.js"></script>
+	<script src="js/lister.js"></script>
+	<title>Listing</title>
+</head>
+
+<body>
+	<div id="lister" class="form-group col-md-6">
+		<form id='lister-form' class="form-signin" action="">
+			<div id='listerViewPart1'>
+				<h2>Listing A Spot</h2>
+				<select id="location" name="location" class="form-control" onchange='CheckLocation(this.value);'>
+					<option value="default">Pick A Location</option>
+					<option value="Lot1">Lot 1</option>
+					<option value="Lot2">Lot 2</option>
+					<option value="Lot3">Lot 3</option>
+					<option value="Lot4">Lot 4</option>
+					<option value="Lot5">Lot 5</option>
+					<option value="Lot6">Lot 6</option>
+					<option value="Lot7">Lot 7</option>
+					<option value="Lot7A">Lot 7A</option>
+					<option value="Lot8">Lot 8</option>
+					<option value="Lot9">Lot 9</option>
+					<option value="Lot10">Lot 10</option>
+					<option value="Lot11">Lot 11</option>
+					<option value="StructA">Structure A</option>
+					<option value="StructB">Structure B</option>
+					<option value="StructC">Structure C</option>
+					<option value="StructD">Structure D</option>
+				</select>
+				<select id="level" name="level" class="form-control" style='display:none;'>
+					<option value="default">Pick A Level</option>
+					<option value="LevelA">Level A</option>
+					<option value="LevelB">Level B</option>
+					<option value="LevelC">Level C</option>
+				</select>
+				<br/>
+				<textarea rows="4" value="Comment" cols="50" class="form-control" name="comment" placeholder="note"></textarea>
+
+				<!-- Submit button, Goes to second part of lister view when clicked -->
+				<a id="submit" class="btn btn-primary btn-block" onclick="showListerViewPart2()" onclick="sendLister(convertFormToJSON('lister-form'))">Submit</a>
+
+				<!--Redirect to Other View, I forget the names.
+					Cancel should bring user back to Home -->
+				<a id="cancel" class="btn btn-primary btn-block" href="home.html">Cancel</a>
+
+			</div>
+			<!-- Second Part with 3 buttons, Displays Success Message -->
+			<!-- Edit Button should go back to first view  -->
+			<!-- Cancel Button should redirect to  -->
+
+			<div id='listerViewPart2' style="display: none">
+				<h2>Thank You For Registering Your Spot!</h2>
+				<p>You will be notified when someone has agreed to an exchange.</p>
+
+				<!-- Goes back to first part of list view, does it delete database when clicked -->
+				<a id="edit" class="btn btn-primary btn-block" onclick="showListerViewPart1()">Edit</a>
+
+				<!-- what happens when you click cancel, delete database -->
+				<a id="delete" class="btn btn-primary btn-block" onclick="showThirdPage()">Delete</a>
+			</div>
+		</form>
+	</div>
+</body>
+
+</html>

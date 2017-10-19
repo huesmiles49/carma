@@ -1,7 +1,7 @@
 // This file will have all the connections needed to send/receive data from the server.
 
 // The server address, change this to the webserver you want to use
-var server = "http://localhost:8080/";
+var server = "http://localhost:8080";
 
 // Checks if server is OK, then request server for the JSON array of all parking spots
 function getList() {
@@ -15,6 +15,7 @@ function getList() {
 	};
 	xhttp.open("GET", server + "/cs3337group3/listParkingSpots", true);
 	xhttp.send();
+}
 
 /**
  * Send registration JSON to server with XMLHTTPRequest
@@ -50,19 +51,21 @@ function sendLogin(userData) {
 	xhttp.setRequestHeader("Content-type", "application/json");
 	xhttp.onreadystatechange = function () {
 		if (this.readyState === 4 && this.status === 200) {
+			console.log(this.responseText);
 			var user = JSON.parse(this.responseText);
 			document.cookie="ID=" + user.id;
 			document.cookie="CARID=" + user.car;
 
 			window.location.href = "home.html";
+			console.log("we here");
 		}
 	};
 	xhttp.send(userData);
 }
 
-function sendLister(JSON){
+function sendLister(JSON) {
 	var xhttp = new XMLHttpRequest();
-	xhttp.open("POST", server + "/cs3337/lister", true)
+	xhttp.open("POST", server + "/cs3337/lister", true);
 	xhttp.setRequestHeader("Content-type", "application/json");
 	xhttp.send(JSON);
 }

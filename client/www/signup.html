@@ -5,12 +5,17 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
-	    crossorigin="anonymous">
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
-	    crossorigin="anonymous" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+	crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+	crossorigin="anonymous" type="text/javascript"></script>
+<script src="js/jquery-3.2.1.js"></script>
+	
+	
+	<link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
 	<style type="text/css">
-		@import "css/login.scss";
+		@import "css/signup.scss";
 	</style>
 	<script src="js/signup.js"></script>
 	<script src="js/jsonhandler.js"></script>
@@ -19,44 +24,36 @@
 	<title>Sign Up</title>
 </head>
 
-<body id="bootstrap-overrides">
-	<div class="wrapper">
-		<form id='signup-form' class="form-signin" action="">
+<body>
+	<form id='signup-form' class="form-signin" action="">
 
-			<!-- first page -->
-			<div id='firstPage'>
-				<h2 class="form-signin-heading">Name</h2>
-				<input type="text" class="form-control" name="firstName" placeholder="first name" required="" />
-				<input type="text" class="form-control" name="lastName" placeholder="last name" required="" />
-				<!-- (optional) find a way to not let users move past the page without 
-					filling out textboxes first. -->
-				<a class="btn btn-lg btn-primary btn-block" onclick="showSecondPage()">Continue</a>
-			</div>
+		<!-- first page -->
+		<div class="form-group col-md-6" id='firstPage'>
+			<h2>Name</h2>
+			<input type="text" class="form-control" name="firstName" placeholder="first name">
+			<input type="text" class="form-control" name="lastName" placeholder="last name">
+			<a class="btn btn-lg btn-primary btn-block" onclick="showSecondPage()">Continue</a>
+		</div>
 
-			<!-- second page -->
-			<div id='secondPage' style="display: none">
-				<h2 class="form-signin-heading">Account</h2>
-				<input type="text" class="form-control" name="email" placeholder="email" required="" autofocus="" />
-				<input type="password" class="form-control" name="password" placeholder="password" required="" />
-				<!-- (optional) find a way to not let users move past the page without 
-					filling out textboxes first. -->
-				<a class="btn btn-lg btn-primary btn-block" onclick="showThirdPage()">Continue</a>
-			</div>
+		<!-- second page -->
+		<div class="form-group col-md-6" id='secondPage' style="display: none">
+			<h2>Account</h2>
+			<input type="text" class="form-control" name="email" placeholder="email">
+			<input type="password" class="form-control" name="password" placeholder="password">
+			<a class="btn btn-lg btn-primary btn-block" onclick="showThirdPage()">Continue</a>
+		</div>
 
-			<!-- third page -->
-			<div id='thirdPage' style="display: none">
-				<h2 class="form-signin-heading">Car Info</h2>
-				<input type="text" class="form-control" name="make" placeholder="make" required="" autofocus="" />
-				<input type="text" class="form-control" name="model" placeholder="model" required="" autofocus="" />
-				<input type="text" class="form-control" name="color" placeholder="color" required="" autofocus="" />
-				<input type="text" class="form-control" name="licensePlateState" placeholder="state" required="" autofocus="" />
-				<input type="text" class="form-control" name="licensePlateNumber" placeholder="#" required="" />
-				<a class="btn btn-lg btn-primary btn-block" onclick="sendRegistration(convertFormToJSON('signup-form'))">Register</a>
-				<!-- onclick sends form to server using the form id
-						sendRegistration.js prepare the JSON to send to serve-->
-			</div>
-		</form>
-	</div>
+		<!-- third page -->
+		<div class="form-group col-md-6" id='thirdPage' style="display: none">
+			<h2>Car Information</h2>
+			<input type="text" class="form-control" name="make" placeholder="make">
+			<input type="text" class="form-control" name="model" placeholder="model">
+			<input type="text" class="form-control" name="color" placeholder="color">
+			<input type="text" class="form-control" name="licensePlateState" placeholder="license state">
+			<input type="text" class="form-control" name="licensePlateNumber" placeholder="license plate">
+			<a class="btn btn-primary btn-block" onclick="sendRegistration(convertFormToJSON('signup-form'))">Register</a>
+		</div>
+	</form>
 </body>
 
 </html>

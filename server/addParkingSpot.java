@@ -84,11 +84,13 @@ public class addParkingSpot extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		Connection c = null;
+		PreparedStatement insertSpot = null;
 	    try {
-	        Connection c = DriverManager
+	        c = DriverManager
 	                .getConnection( url, username, password );
 	        
-	        PreparedStatement insertSpot = c.prepareStatement(
+	        insertSpot = c.prepareStatement(
 	                "insert into Spots(Lister_ID, Lister_Car, Location, Time_Listed, Time_Swap, Comment)  values(?,?,?,?,?,?)");
 	        
 	        insertSpot.setInt(1, userID);
@@ -104,7 +106,11 @@ public class addParkingSpot extends HttpServlet {
 	    catch( SQLException e )
 	    {
 	    	throw new ServletException( e );
-	    }
+	    } finally {
+			//try { rs.close(); } catch (Exception e) { /* ignored */ }
+			try { insertSpot.close(); } catch (Exception e) { /* ignored */ }
+			try { c.close(); } catch (Exception e) { /* ignored */ }
+		}
 	}
 }
 
