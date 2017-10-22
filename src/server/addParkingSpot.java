@@ -69,11 +69,11 @@ public class addParkingSpot extends HttpServlet {
         
         int userID = 0, userCar = 0;
         String location = "";
+        String GPSlocation = "";
         String timeSwap = "Now";
         String comment = "";
         String level = "";
         
-        /* to do: add check for cookie to get user id */
         
         try {
 			JSONObject data = (JSONObject) parser.parse(request.getReader());
@@ -81,6 +81,7 @@ public class addParkingSpot extends HttpServlet {
 			level = (String) data.get("level");
 			//timeSwap = (String) data.get("timeSwap");
 			comment = (String) data.get("comment");
+			//addGPSLocation check here
 			
 			//check cookie for user id and car id
 			Cookie[] cookies = request.getCookies();
@@ -104,14 +105,15 @@ public class addParkingSpot extends HttpServlet {
 	                .getConnection( url, username, password );
 	        
 	        insertSpot = c.prepareStatement(
-	                "insert into Spots(Lister_ID, Lister_Car, Location, Time_Listed, Time_Swap, Comment)  values(?,?,?,?,?,?)");
+	                "insert into Spots(Lister_ID, Lister_Car, Location, GPS_Location, Time_Listed, Time_Swap, Comment)  values(?,?,?,?,?,?,?)");
 	        
 	        insertSpot.setInt(1, userID);
 	        insertSpot.setInt(2, userCar);
 	        insertSpot.setString(3,  location + ", " + level);
-	        insertSpot.setString(4, (new Date().toString()));
-	        insertSpot.setString(5, timeSwap);
-	        insertSpot.setString(6, comment);
+	        insertSpot.setString(4, GPSlocation);
+	        insertSpot.setString(5, (new Date().toString()));
+	        insertSpot.setString(6, timeSwap);
+	        insertSpot.setString(7, comment);
 	        
 	        insertSpot.executeUpdate();
 	        

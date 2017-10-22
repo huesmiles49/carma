@@ -39,6 +39,7 @@ create table Spots (
   Lister_ID int,
   Lister_Car int,
   Location varchar(255),
+  GPS_Location varchar(255),
   Time_Listed varchar(255),
   Time_Swap varchar(255),
   Comment varchar(255),
