@@ -10,6 +10,7 @@ import java.util.Date;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -80,6 +81,18 @@ public class addParkingSpot extends HttpServlet {
 			level = (String) data.get("level");
 			//timeSwap = (String) data.get("timeSwap");
 			comment = (String) data.get("comment");
+			
+			//check cookie for user id and car id
+			Cookie[] cookies = request.getCookies();
+			
+			for(Cookie current: cookies) {
+				if(current.getName().equals("ID")) {
+					userID = Integer.parseInt(current.getValue());
+				} else if(current.getName().equals("CARID")) {
+					userCar = Integer.parseInt(current.getValue());
+				}
+			}
+			
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -98,7 +111,7 @@ public class addParkingSpot extends HttpServlet {
 	        insertSpot.setString(3,  location + ", " + level);
 	        insertSpot.setString(4, (new Date().toString()));
 	        insertSpot.setString(5, timeSwap);
-	        insertSpot.setString(5, comment);
+	        insertSpot.setString(6, comment);
 	        
 	        insertSpot.executeUpdate();
 	        

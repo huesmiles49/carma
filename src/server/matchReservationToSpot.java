@@ -29,7 +29,7 @@ public class matchReservationToSpot implements Runnable {
 			c = DriverManager.getConnection(url, username, password);
 			
 			getActiveSpots = c.prepareStatement(
-					"select ID, Time_Listed from Spots where ID not in (select ID from Matches)");
+					"select ID, Time_Listed from Spots where ID not in (select Spot_ID from Matches)");
 
 			findWinner = c.prepareStatement(
 					"select max(Carma),ID from Users where ID In (Select Reserver_ID from Reservations where Spot_ID = ?)");

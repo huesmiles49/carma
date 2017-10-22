@@ -13,6 +13,7 @@ function getList() {
 			displayListOfSpots(this.responseText);
 		}
 	};
+	xhttp.withCredentials = true;
 	xhttp.open("GET", server + "/cs3337group3/listParkingSpots", true);
 	xhttp.send();
 }
@@ -30,8 +31,8 @@ function sendRegistration(userData) {
 	xhttp.onreadystatechange = function () {
 		if (this.readyState === 4 && this.status === 200) {
 			var user = JSON.parse(this.responseText);
-			document.cookie="ID=" + user.id;
-			document.cookie="CARID=" + user.car;
+			document.cookie="ID=" + user.id + "; path=/";
+			document.cookie="CARID=" + user.car+ "; path=/";
 
 			window.location.href = "home.html";
 		}
@@ -53,8 +54,8 @@ function sendLogin(userData) {
 		if (this.readyState === 4 && this.status === 200) {
 			console.log(this.responseText);
 			var user = JSON.parse(this.responseText);
-			document.cookie="ID=" + user.id;
-			document.cookie="CARID=" + user.car;
+			document.cookie="ID=" + user.id+ "; path=/";
+			document.cookie="CARID=" + user.car+ "; path=/";
 
 			window.location.href = "home.html";
 			console.log("we here");
@@ -63,9 +64,10 @@ function sendLogin(userData) {
 	xhttp.send(userData);
 }
 
-function sendLister(JSON) {
+function sendLister(parkingData) {
 	var xhttp = new XMLHttpRequest();
-	xhttp.open("POST", server + "/cs3337/lister", true);
+	xhttp.open("POST", server + "/cs3337group3/addParkingSpot", true);
 	xhttp.setRequestHeader("Content-type", "application/json");
-	xhttp.send(JSON);
+	xhttp.withCredentials = true;
+	xhttp.send(parkingData);
 }
