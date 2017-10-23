@@ -85,12 +85,13 @@ public class addParkingSpot extends HttpServlet {
 			
 			//check cookie for user id and car id
 			Cookie[] cookies = request.getCookies();
-			
-			for(Cookie current: cookies) {
-				if(current.getName().equals("ID")) {
-					userID = Integer.parseInt(current.getValue());
-				} else if(current.getName().equals("CARID")) {
-					userCar = Integer.parseInt(current.getValue());
+			if(cookies!=null) {
+				for(Cookie current: cookies) {
+					if(current.getName().equals("ID")) {
+						userID = Integer.parseInt(current.getValue());
+					} else if(current.getName().equals("CARID")) {
+						userCar = Integer.parseInt(current.getValue());
+					}
 				}
 			}
 			
