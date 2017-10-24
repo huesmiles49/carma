@@ -59,8 +59,9 @@
 				<input type = "text" id = "longitude" name = "longitude"/>
 				
 
-				<!-- Submit button, Goes to second part of lister view when clicked -->
-				<a id="submit" class="btn btn-primary btn-block" onclick="showListerViewPart2(); onclick=sendLister(convertFormToJSON('lister-form'));">Submit</a>
+				<!-- Submit button, Goes to second part of lister view when clicked and sends data to server -->
+				<a id="submit" class="btn btn-primary btn-block" onclick="showListerViewPart2(); sendLister(convertFormToJSON('lister-form'));">Submit</a>
+
 
 				<!--Redirect to Other View, I forget the names.
 					Cancel should bring user back to Home -->

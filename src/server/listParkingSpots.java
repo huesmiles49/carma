@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,7 +52,7 @@ public class listParkingSpots extends HttpServlet {
 
 			c = DriverManager.getConnection(url, username, password);
 
-			getSpots = c.prepareStatement("select Lister_ID,Location,Time_Swap,Comment from Spots");
+			getSpots = c.prepareStatement("select ID,Location,Time_Swap,Comment from Spots where id not in (select Spot_ID from Matches)");
 
 			SpotsResults = getSpots.executeQuery();
 
@@ -59,11 +60,11 @@ public class listParkingSpots extends HttpServlet {
 				String currentLocation = SpotsResults.getString("Location");
 				String currentTimeSwap = SpotsResults.getString("Time_Swap");
 				String currentComment = SpotsResults.getString("Comment");
-				int currentListerID = SpotsResults.getInt("Lister_ID");
+				int spotID = SpotsResults.getInt("ID");
 
 				JSONObject currentLine = new JSONObject();
 
-				currentLine.put("id", currentListerID);
+				currentLine.put("id", spotID);
 				currentLine.put("timeSwap", currentTimeSwap);
 				currentLine.put("location", currentLocation);
 				currentLine.put("comment", currentComment);
@@ -96,6 +97,23 @@ public class listParkingSpots extends HttpServlet {
 			
 			int userID = 0, userCar = 0;
 			int spotID = 0;
+			
+			//check cookie for user id and car id
+			Cookie[] cookies = request.getCookies();
+			if(cookies!=null) {
+				for(Cookie current: cookies) {
+					if(current.getName().equals("ID")) {
+						userID = Integer.parseInt(current.getValue());
+					} else if(current.getName().equals("CARID")) {
+						userCar = Integer.parseInt(current.getValue());
+					}
+				}
+			}
+			//check paramaters for parking spot id
+			String spotParamter;
+			if((spotParamter = request.getParameter("id")) != null) {
+				spotID = Integer.parseInt(spotParamter);
+			}
 	
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();
@@ -104,8 +122,9 @@ public class listParkingSpots extends HttpServlet {
 	
 			insertReservation = c.prepareStatement(
 					"insert into Reservations(Spot_ID,Reserver_ID,Reserver_Car) values (?, ?, ?)");
-		    
-			/* TODO: get spotID from parameter? and user info from cookie */
+			System.out.println(userID);
+			System.out.println(userCar);
+			System.out.println(spotID);
 			
 			insertReservation.setInt(1, spotID);
 		    insertReservation.setInt(2, userID);

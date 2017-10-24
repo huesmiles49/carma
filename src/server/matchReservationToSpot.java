@@ -12,6 +12,7 @@ public class matchReservationToSpot implements Runnable {
 
 	@Override
 	public void run() {
+		System.out.println("Background Match running");
 		Connection c = null;
 		PreparedStatement getActiveSpots = null;
 		PreparedStatement findWinner = null;
@@ -29,7 +30,7 @@ public class matchReservationToSpot implements Runnable {
 			c = DriverManager.getConnection(url, username, password);
 			
 			getActiveSpots = c.prepareStatement(
-					"select ID, Time_Listed from Spots where ID not in (select ID from Matches)");
+					"select ID, Time_Listed from Spots where ID not in (select Spot_ID from Matches)");
 
 			findWinner = c.prepareStatement(
 					"select max(Carma),ID from Users where ID In (Select Reserver_ID from Reservations where Spot_ID = ?)");
@@ -61,7 +62,7 @@ public class matchReservationToSpot implements Runnable {
 				
 			}
 			
-		} catch (SQLException | ClassNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
 			try { winnerResults.close(); } catch (Exception e) { /* ignored */ }

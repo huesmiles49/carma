@@ -1,15 +1,11 @@
 
 drop table if exists Reviews;
+drop table if exists MatchGPS;
 drop table if exists Matches;
 drop table if exists Reservations;
 drop table if exists Spots;
 drop table if exists Users_Cars;
 drop table if exists Users;
-
-
-
-
-
 
 Create table Users (
   ID int NOT NULL auto_increment,
@@ -39,6 +35,7 @@ create table Spots (
   Lister_ID int,
   Lister_Car int,
   Location varchar(255),
+  GPS_Location varchar(255),
   Time_Listed varchar(255),
   Time_Swap varchar(255),
   Comment varchar(255),
@@ -67,6 +64,17 @@ create table Matches(
    foreign key(Reservations_ID) references Reservations(ID)
 );
 
+create table MatchGPS(
+   ID int not null auto_increment,
+   User_ID int,
+   Matches_ID int,
+   GPS_Location varchar(255),
+   primary key(ID),
+   foreign key(User_ID) references Users(ID),
+   foreign key(Matches_ID) references Matches(ID),
+   unique (User_ID,Matches_ID)
+);
+
 create table Reviews(
    ID int not null auto_increment,
    About_ID int,
@@ -92,3 +100,5 @@ insert into Spots(Lister_ID,Lister_Car,Location,Time_Listed,Time_Swap,Comment) v
 insert into Reservations(Spot_ID,Reserver_ID,Reserver_Car) values ((Select ID from Spots where Lister_ID=(Select ID from Users where Email="John@Doe.com")),(Select ID from Users where Email="Jane@Doe.com"),(Select ID from Users_Cars where User_ID=(Select ID from Users where Email="Jane@Doe.com")));
 insert into Reservations(Spot_ID,Reserver_ID,Reserver_Car) values ((Select ID from Spots where Lister_ID=(Select ID from Users where Email="Jane@Doe.com")),(Select ID from Users where Email="John@Doe.com"),(Select ID from Users_Cars where User_ID=(Select ID from Users where Email="John@Doe.com")));
 
+insert into Matches(Spot_ID,Reservations_ID) values ((Select ID from Spots where Lister_ID=(Select ID from Users where Email="John@Doe.com")),(Select ID from Reservations where Reserver_ID=(Select ID from Users where Email="Jane@Doe.com")));
+insert into Matches(Spot_ID,Reservations_ID) values ((Select ID from Spots where Lister_ID=(Select ID from Users where Email="Jane@Doe.com")),(Select ID from Reservations where Reserver_ID=(Select ID from Users where Email="John@Doe.com")));
