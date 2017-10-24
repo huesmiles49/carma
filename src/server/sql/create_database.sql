@@ -93,3 +93,5 @@ insert into Spots(Lister_ID,Lister_Car,Location,Time_Listed,Time_Swap,Comment) v
 insert into Reservations(Spot_ID,Reserver_ID,Reserver_Car) values ((Select ID from Spots where Lister_ID=(Select ID from Users where Email="John@Doe.com")),(Select ID from Users where Email="Jane@Doe.com"),(Select ID from Users_Cars where User_ID=(Select ID from Users where Email="Jane@Doe.com")));
 insert into Reservations(Spot_ID,Reserver_ID,Reserver_Car) values ((Select ID from Spots where Lister_ID=(Select ID from Users where Email="Jane@Doe.com")),(Select ID from Users where Email="John@Doe.com"),(Select ID from Users_Cars where User_ID=(Select ID from Users where Email="John@Doe.com")));
 
+insert into Matches(Spot_ID,Reservations_ID) values ((Select ID from Spots where Lister_ID=(Select ID from Users where Email="John@Doe.com")),(Select ID from Reservations where Reserver_ID=(Select ID from Users where Email="Jane@Doe.com")));
+insert into Matches(Spot_ID,Reservations_ID) values ((Select ID from Spots where Lister_ID=(Select ID from Users where Email="Jane@Doe.com")),(Select ID from Reservations where Reserver_ID=(Select ID from Users where Email="John@Doe.com")));
