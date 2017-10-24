@@ -65,7 +65,7 @@ function sendLogin(userData) {
 
 function sendLister(JSON) {
 	var xhttp = new XMLHttpRequest();
-	xhttp.open("POST", server + "/cs3337/lister", true);
+	xhttp.open("POST", server + "/cs3337group3/addParkingSpot", true);
 	xhttp.setRequestHeader("Content-type", "application/json");
 	xhttp.send(JSON);
 }

@@ -25,3 +25,17 @@ function CheckLocation(val) {
 	else
 		element.style.display = 'none';
 }
+
+function geoFindMe() {
+
+    function success(position) {
+        
+        var lat = position.coords.latitude;
+        document.getElementById("latitude").value = lat;
+        
+        var long = position.coords.longitude;
+        document.getElementById("longitude").value = long;
+      }
+
+   navigator.geolocation.getCurrentPosition(success);
+}

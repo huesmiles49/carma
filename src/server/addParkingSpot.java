@@ -1,6 +1,7 @@
 package server;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -66,7 +67,10 @@ public class addParkingSpot extends HttpServlet {
         String username = "cs3337";
         String password = "csula2017";
         
-        int userID = 0, userCar = 0;
+        response.setContentType("application/json");
+		PrintWriter out = response.getWriter();
+        
+        int userID = 3, userCar = 3;
         String location = "";
         String timeSwap = "Now";
         String comment = "";
