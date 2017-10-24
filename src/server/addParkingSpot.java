@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.servlet.ServletConfig;
@@ -112,7 +113,7 @@ public class addParkingSpot extends HttpServlet {
 	        insertSpot.setInt(2, userCar);
 	        insertSpot.setString(3,  location + ", " + level);
 	        insertSpot.setString(4, GPSlocation);
-	        insertSpot.setString(5, (new Date().toString()));
+	        insertSpot.setString(5, (LocalDateTime.now().toString()));
 	        insertSpot.setString(6, timeSwap);
 	        insertSpot.setString(7, comment);
 	        
