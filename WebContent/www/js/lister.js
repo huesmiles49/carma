@@ -26,16 +26,16 @@ function CheckLocation(val) {
 		element.style.display = 'none';
 }
 
-function geoFindMe() {
+function allowGPS(){
+	if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(geoFindMe);
+    }
+}
 
-    function success(position) {
-        
+function geoFindMe(position) {
         var lat = position.coords.latitude;
         document.getElementById("latitude").value = lat;
         
         var long = position.coords.longitude;
         document.getElementById("longitude").value = long;
-      }
-
-   navigator.geolocation.getCurrentPosition(success);
 }
