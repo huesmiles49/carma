@@ -20,6 +20,10 @@ function displayMatchLocation(matchUser) {
   // populate table with elements
   document.getElementById("name").innerHTML = match.otherUserName;
   document.getElementById("location").innerHTML = match.parkingSpotLocation;
+  
+  //add match cookie
+  document.cookie="MATCHID=" + match.matchID + "; path=/";
+  
   console.log(this);
   var disable;
 }
@@ -42,5 +46,5 @@ function geoFindMe(position) {
   // set pin for the current user
 
   // call the serverInterface:sendMatchGPS(converFormToJSON(currentUserLocation))
-  sendMatchGPS(convertFormToJSON(currentUserLocation));
+  sendMatchGPS(convertLatLongToJSON(lat,long));
 }

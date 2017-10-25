@@ -230,8 +230,8 @@ public class match extends HttpServlet {
 		
 		try {
 			JSONObject data = (JSONObject) parser.parse(request.getReader());
-			currentGPSLat = (String) data.get("latitude");
-			currentGPSLong = (String) data.get("longitude");
+			currentGPSLat = Double.toString( (double) data.get("latitude"));
+			currentGPSLong = Double.toString( (double) data.get("longitude"));
 			
 			
 		} catch (ParseException e) {
