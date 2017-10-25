@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  * Servlet implementation class match
@@ -195,11 +197,106 @@ public class match extends HttpServlet {
 		out.println(results.toJSONString());
 	}
 
+	/**
+	 * Post handles sending and receiving the current GPS location for the users
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//db connection 
+		String url = "jdbc:mysql://localhost/cs3337group3";
+		String username = "cs3337";
+		String password = "csula2017";
+		
+		//json handler
+		JSONParser parser = new JSONParser();
+		
+		//input variables
+		int userID = 0, userCar = 0, matchID = 0;
+		String currentGPSLocation = "";
+		
+		//return variables
+		String otherUserGPSLocation ="";
+		
+		//check cookie for user id and car id and matchid
+		Cookie[] cookies = request.getCookies();
+		if(cookies!=null) {
+			for(Cookie current: cookies) {
+				if(current.getName().equals("ID")) {
+					userID = Integer.parseInt(current.getValue());
+				} else if(current.getName().equals("CARID")) {
+					userCar = Integer.parseInt(current.getValue());
+					
+					//TODO: make sure client side sets the same cookie for match id
+				} else if(current.getName().equals("MATCHID")) {
+					matchID = Integer.parseInt(current.getValue());
+				}
+			}
+		}
+		
+		try {
+			JSONObject data = (JSONObject) parser.parse(request.getReader());
+			
+			//TODO: check if client side sends the same json here
+			currentGPSLocation = (String) data.get("gps_location");
+			
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//have all inputs now do SQL stuff and get return values
+		Connection c = null;
+		PreparedStatement insertUpdate = null, findotheruserlocation = null;
+		ResultSet otheruserlocation = null;
+	    try {
+	    	c = DriverManager
+	                .getConnection( url, username, password );
+	    	
+	    	//updating current user location
+	    	insertUpdate = c.prepareStatement(
+	    			"Insert into MatchGPS(User_ID, Matches_ID, GPS_Location) values (?,?,?) on duplicate key update GPS_Location=?");
+	    	
+	    	insertUpdate.setInt(1, userID);
+	    	insertUpdate.setInt(2, matchID);
+	    	insertUpdate.setString(3, currentGPSLocation);
+	    	insertUpdate.setString(4, currentGPSLocation);
+	    	
+	    	insertUpdate.executeUpdate();
+	    	
+	    	//find other users location
+	    	findotheruserlocation = c.prepareStatement(
+	    			"select GPS_Location from MatchGPS where Matches_ID=? and User_ID!=?");
+	    	
+	    	findotheruserlocation.setInt(1, matchID);
+	    	findotheruserlocation.setInt(2, userID);
+	    	
+	    	otheruserlocation = findotheruserlocation.executeQuery();
+	    	
+	    	if(otheruserlocation.next()) {
+	    		otherUserGPSLocation = otheruserlocation.getString("GPS_Location");
+	    	}
+	    	
+	    } catch( SQLException e ) {
+	    	throw new ServletException( e );
+	    } finally {
+			try { otheruserlocation.close(); } catch (Exception e) { /* ignored */ }
+			try { findotheruserlocation.close(); } catch (Exception e) { /* ignored */ }
+			try { insertUpdate.close(); } catch (Exception e) { /* ignored */ }
+			try { c.close(); } catch (Exception e) { /* ignored */ }
+		}
+		
+	    //generate JSon response
+	    JSONObject results = new JSONObject();
+	    //TODO: client side check for this json on return
+	    results.put("gps_location", otheruserlocation);
+	    
+	    //and finally send response
+	    response.setContentType("application/json");
+		PrintWriter out = response.getWriter();
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+	    out.println(results.toJSONString());
+	    
 	}
 
 }

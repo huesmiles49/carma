@@ -52,10 +52,16 @@
 					<option value="LevelC">Level C</option>
 				</select>
 				<br/>
-				<textarea rows="4" value="Comment" cols="50" class="form-control" name="comment" placeholder="note"></textarea>
+				<textarea rows="4" onblur="geoFindMe();" cols="50" class="form-control" name="comment" placeholder="note"></textarea>
+				
+			
+				<input type = "text" id = "latitude" name = "latitude"/>
+				<input type = "text" id = "longitude" name = "longitude"/>
+				
 
-				<!-- Submit button, Goes to second part of lister view when clicked -->
+				<!-- Submit button, Goes to second part of lister view when clicked and sends data to server -->
 				<a id="submit" class="btn btn-primary btn-block" onclick="showListerViewPart2(); sendLister(convertFormToJSON('lister-form'));">Submit</a>
+
 
 				<!--Redirect to Other View, I forget the names.
 					Cancel should bring user back to Home -->
@@ -69,6 +75,13 @@
 			<div id='listerViewPart2' style="display: none">
 				<h2>Thank You For Registering Your Spot!</h2>
 				<p>You will be notified when someone has agreed to an exchange.</p>
+			
+				
+
+
+
+
+				
 
 				<!-- Goes back to first part of list view, does it delete database when clicked -->
 				<a id="edit" class="btn btn-primary btn-block" onclick="showListerViewPart1()">Edit</a>

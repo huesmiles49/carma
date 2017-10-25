@@ -1,15 +1,11 @@
 
 drop table if exists Reviews;
+drop table if exists MatchGPS;
 drop table if exists Matches;
 drop table if exists Reservations;
 drop table if exists Spots;
 drop table if exists Users_Cars;
 drop table if exists Users;
-
-
-
-
-
 
 Create table Users (
   ID int NOT NULL auto_increment,
@@ -66,6 +62,17 @@ create table Matches(
    primary key(ID),
    foreign key(Spot_ID) references Spots(ID),
    foreign key(Reservations_ID) references Reservations(ID)
+);
+
+create table MatchGPS(
+   ID int not null auto_increment,
+   User_ID int,
+   Matches_ID int,
+   GPS_Location varchar(255),
+   primary key(ID),
+   foreign key(User_ID) references Users(ID),
+   foreign key(Matches_ID) references Matches(ID),
+   unique (User_ID,Matches_ID)
 );
 
 create table Reviews(
