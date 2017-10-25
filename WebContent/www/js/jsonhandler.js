@@ -21,3 +21,17 @@ function convertFormToJSON(formName) {
 
 	return result;
 }
+
+/**
+ * Convert the lat and long into json for the server
+ * @param Lat
+ * @param Long
+ * @returns
+ */
+function convertLatLongToJSON(Lat, Long) {
+	var result = {"latitude":Lat, "longitude":Long};
+	result = JSON.stringify(result);
+	console.log(result);
+	
+	return result;
+}
