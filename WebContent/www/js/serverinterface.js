@@ -85,3 +85,20 @@ function getMatch() {
 	xhttp.open("GET", server + "/cs3337group3/match", true);
 	xhttp.send();
 }
+
+function sendMatchGPS(gpsLocation) {
+	var xhttp;
+	xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if (this.readyState === 4 && this.status === 200) {
+			console.log(this.responseText)
+			var otherUserLocation = JSON.parse(this.responseText);
+			//callback: set the pin on the map from otherUserLocation.latitude and .longitude
+			// also checks for null value from otherUserLocation.latitude and .longitude
+
+		}
+	};
+	xhttp.withCredentials = true;
+	xhttp.open("POST", server + "/cs3337group3/match", true);
+	xhttp.send(gpsLocation);
+}

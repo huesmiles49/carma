@@ -28,14 +28,6 @@ import org.json.simple.parser.ParseException;
 public class match extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public match() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 
@@ -46,10 +38,7 @@ public class match extends HttpServlet {
 		}
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String url = "jdbc:mysql://localhost/cs3337group3";
@@ -62,7 +51,9 @@ public class match extends HttpServlet {
 		String otherUserFirstName = "";
 		String otherUserCar = "";
 		String parkingSpotLocation = "";
-		String parkingSpotGPSLocation = "";
+		String parkingSpotGPSLat = "";
+		String parkingSpotGPSLong = "";
+		String parkingSpotComment= "";
 
 		// check cookie for user id and car id
 		Cookie[] cookies = request.getCookies();
@@ -109,16 +100,18 @@ public class match extends HttpServlet {
 				otherusercar = rsReservation.getInt("Reserver_Car");
 			}
 
-//			spotData = c.prepareStatement("select Lister_ID, Lister_Car, Location, GPS_Location from Spots where ID=?");
-			spotData = c.prepareStatement("select Lister_ID, Lister_Car, Location from Spots where ID=?");
+			spotData = c.prepareStatement("select Lister_ID, Lister_Car, Location, Comment, GPS_Lat, GPS_Long from Spots where ID=?");
 
 			spotData.setInt(1, parkingspotid);
 
 			rsSpot = spotData.executeQuery();
 
+			// result variables
 			if (rsSpot.next()) {
-//				parkingSpotGPSLocation = rsSpot.getString("GPS_Location");
+				parkingSpotGPSLat = rsSpot.getString("GPS_Lat");
+				parkingSpotGPSLong = rsSpot.getString("GPS_Long");
 				parkingSpotLocation = rsSpot.getString("Location");
+				parkingSpotComment = rsSpot.getString("Comment");
 
 				// if the current user was the reserver then the other user was the lister
 				if (otheruserid == userID) {
@@ -187,8 +180,10 @@ public class match extends HttpServlet {
 		results.put("matchID", matchID);
 		results.put("otherUserName", otherUserFirstName);
 		results.put("otherUserCar", otherUserCar);
+		results.put("parkingSpotComment", parkingSpotComment);
 		results.put("parkingSpotLocation", parkingSpotLocation);
-//		results.put("parkingSpotGPSLocation", parkingSpotGPSLocation);
+		results.put("parkingSpotGPSLat", parkingSpotGPSLat);
+		results.put("parkingSpotGPSLong", parkingSpotGPSLong);
 
 		// and finally send response
 		response.setContentType("application/json");
@@ -212,10 +207,10 @@ public class match extends HttpServlet {
 		
 		//input variables
 		int userID = 0, userCar = 0, matchID = 0;
-		String currentGPSLocation = "";
+		String currentGPSLat = "", currentGPSLong = "";
 		
 		//return variables
-		String otherUserGPSLocation ="";
+		String otherUserGPSLat ="",otherUserGPSLong = "";
 		
 		//check cookie for user id and car id and matchid
 		Cookie[] cookies = request.getCookies();
@@ -235,13 +230,11 @@ public class match extends HttpServlet {
 		
 		try {
 			JSONObject data = (JSONObject) parser.parse(request.getReader());
-			
-			//TODO: check if client side sends the same json here
-			currentGPSLocation = (String) data.get("gps_location");
+			currentGPSLat = (String) data.get("latitude");
+			currentGPSLong = (String) data.get("longitude");
 			
 			
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -255,18 +248,20 @@ public class match extends HttpServlet {
 	    	
 	    	//updating current user location
 	    	insertUpdate = c.prepareStatement(
-	    			"Insert into MatchGPS(User_ID, Matches_ID, GPS_Location) values (?,?,?) on duplicate key update GPS_Location=?");
+	    			"Insert into MatchGPS(User_ID, Matches_ID, GPS_Lat, GPS_Long) values (?,?,?,?) on duplicate key update GPS_Lat=?, GPS_Long=?");
 	    	
 	    	insertUpdate.setInt(1, userID);
 	    	insertUpdate.setInt(2, matchID);
-	    	insertUpdate.setString(3, currentGPSLocation);
-	    	insertUpdate.setString(4, currentGPSLocation);
+	    	insertUpdate.setString(3, currentGPSLat);
+	    	insertUpdate.setString(4, currentGPSLong);
+	    	insertUpdate.setString(5, currentGPSLat);
+	    	insertUpdate.setString(6, currentGPSLong);
 	    	
 	    	insertUpdate.executeUpdate();
 	    	
 	    	//find other users location
 	    	findotheruserlocation = c.prepareStatement(
-	    			"select GPS_Location from MatchGPS where Matches_ID=? and User_ID!=?");
+	    			"select GPS_Lat, GPS_Long from MatchGPS where Matches_ID=? and User_ID!=?");
 	    	
 	    	findotheruserlocation.setInt(1, matchID);
 	    	findotheruserlocation.setInt(2, userID);
@@ -274,7 +269,8 @@ public class match extends HttpServlet {
 	    	otheruserlocation = findotheruserlocation.executeQuery();
 	    	
 	    	if(otheruserlocation.next()) {
-	    		otherUserGPSLocation = otheruserlocation.getString("GPS_Location");
+	    		otherUserGPSLat = otheruserlocation.getString("GPS_Lat");
+	    		otherUserGPSLong = otheruserlocation.getString("GPS_Long");
 	    	}
 	    	
 	    } catch( SQLException e ) {
@@ -289,7 +285,8 @@ public class match extends HttpServlet {
 	    //generate JSon response
 	    JSONObject results = new JSONObject();
 	    //TODO: client side check for this json on return
-	    results.put("gps_location", otheruserlocation);
+	    results.put("latitude", otherUserGPSLat);
+	    results.put("longitude", otherUserGPSLong);
 	    
 	    //and finally send response
 	    response.setContentType("application/json");

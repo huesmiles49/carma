@@ -74,7 +74,8 @@ public class addParkingSpot extends HttpServlet {
         
         int userID = 3, userCar = 3;
         String location = "";
-        String GPSlocation = "";
+        String GPSLat = "";
+        String GPSLong = "";
         String timeSwap = "Now";
         String comment = "";
         String level = "";
@@ -86,7 +87,7 @@ public class addParkingSpot extends HttpServlet {
 			level = (String) data.get("level");
 			//timeSwap = (String) data.get("timeSwap");
 			comment = (String) data.get("comment");
-			//addGPSLocation check here
+			
 			
 			//check cookie for user id and car id
 			Cookie[] cookies = request.getCookies();
@@ -116,7 +117,7 @@ public class addParkingSpot extends HttpServlet {
 	        insertSpot.setInt(1, userID);
 	        insertSpot.setInt(2, userCar);
 	        insertSpot.setString(3,  location + ", " + level);
-	        insertSpot.setString(4, GPSlocation);
+//	        insertSpot.setString(4, GPSlocation);
 	        insertSpot.setString(5, (LocalDateTime.now().toString()));
 	        insertSpot.setString(6, timeSwap);
 	        insertSpot.setString(7, comment);
