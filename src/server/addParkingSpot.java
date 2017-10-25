@@ -73,7 +73,7 @@ public class addParkingSpot extends HttpServlet {
         response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
         
-        int userID = 0, userCar = 0, spotID = 0;
+        int userID = 0, userCar = 0, spotID = -1;
         String location = "";
         String GPSLat = "";
         String GPSLong = "";
@@ -90,6 +90,11 @@ public class addParkingSpot extends HttpServlet {
 			comment = (String) data.get("comment");
 			GPSLat = (String) data.get("latitude");
 			GPSLong = (String) data.get("longitude");
+			
+			//TODO: double check json for spotID
+			String temp = (String) data.get("spotId");
+			if(temp !=null && !temp.isEmpty())
+				spotID = Integer.parseInt(temp);
 			
 			//check cookie for user id and car id
 			Cookie[] cookies = request.getCookies();
@@ -143,5 +148,64 @@ public class addParkingSpot extends HttpServlet {
 			try { c.close(); } catch (Exception e) { /* ignored */ }
 		}
 	}
+	
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		JSONParser parser = new JSONParser();
+        
+        String url = "jdbc:mysql://localhost/cs3337group3";
+        String username = "cs3337";
+        String password = "csula2017";
+        
+        response.setContentType("application/json");
+		PrintWriter out = response.getWriter();
+        
+        int spotID = -1;
+        int result = -1;
+        JSONObject resultJSON = new JSONObject();
+        
+        try {
+        	JSONObject data = (JSONObject) parser.parse(request.getReader());
+        	//TODO: double check json for spotID
+			String temp = (String) data.get("spotId");
+			if(temp !=null && !temp.isEmpty())
+				spotID = Integer.parseInt(temp);
+			else { //no spotid so do nothing, something bad happened
+				resultJSON.put("result", result);
+				out.println(resultJSON.toJSONString());
+				return;
+			}
+        } catch (ParseException e) {
+			e.printStackTrace();
+		}
+        
+        Connection c = null;
+		PreparedStatement deleteSpot = null;
+	    try {
+	        c = DriverManager
+	                .getConnection( url, username, password );
+	        
+	        deleteSpot = c.prepareStatement(
+	                "delete from Spots where ID=?");
+	        
+	        deleteSpot.setInt(1, spotID);
+	               
+	        //returns 1 if a row got deleted, 0 otherwise
+	        result = deleteSpot.executeUpdate();
+	        
+	    }
+	    catch( SQLException e )
+	    {
+	    	throw new ServletException( e );
+	    } finally {
+			try { deleteSpot.close(); } catch (Exception e) { /* ignored */ }
+			try { c.close(); } catch (Exception e) { /* ignored */ }
+		}
+	    
+	    //on return make sure result == 1
+	    resultJSON.put("result", result);
+		out.println(resultJSON.toJSONString());
+	    
+	}
+	
 }
 
