@@ -9,7 +9,7 @@ function getList() {
 	xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if (this.readyState === 4 && this.status === 200) {
-			console.log(this.responseText)
+			console.log(this.responseText);
 			displayListOfSpots(this.responseText);
 		}
 	};
@@ -77,7 +77,7 @@ function getMatch() {
 	xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
 		if (this.readyState === 4 && this.status === 200) {
-			console.log(this.responseText)
+			console.log(this.responseText);
 			displayMatchLocation(this.responseText);
 		}
 	};
@@ -101,4 +101,33 @@ function sendMatchGPS(gpsLocation) {
 	xhttp.withCredentials = true;
 	xhttp.open("POST", server + "/cs3337group3/match", true);
 	xhttp.send(gpsLocation);
+}
+
+
+function getMaxMatch() {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if (this.readyState === 4 && this.status === 200) {
+			console.log(this.responseText);
+			var response = JSON.parse(this.responseText);
+			setMaxMatchCookie(response.maxMatch);
+		}
+	};
+	xhttp.withCredentials = true;
+	xhttp.open("GET", server + "/cs3337group3/transition", true);
+	xhttp.send();
+}
+
+function checkWinner() {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if (this.readyState === 4 && this.status === 200) {
+			console.log(this.responseText);
+			var response = JSON.parse(this.responseText);
+			checkIfWinner(response.winningMatch);
+		}
+	};
+	xhttp.withCredentials = true;
+	xhttp.open("POST", server + "/cs3337group3/transition", true);
+	xhttp.send();
 }
