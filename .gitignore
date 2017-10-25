@@ -1,25 +1,23 @@
+# Ignore everything
+*
 
+# But not these files...
+!.gitignore
 
-#client-side
-!*.html
-!*.scss
-!*.css
-!*.js
+!src
+!src/
+!src/**
+
+!WebContent
+!WebContent/
+!WebContent/www
+!WebContent/www/
+!WebContent/www/**
+!WebContent/WEB-INF/web.xml
+
 !*.txt
-!*.png
+!*.md
 
-client/*.xml
-client/*
-!client/www/
-
-
-#server-side
-!*.java
-!*.SQL
-
-!server/*.xml
-!server/WEB-INF/
-!server/WEB-INF/**
-
+# MAC HIDDEN FILES
 .DS_Store
-client/www/.DS_Store
+
