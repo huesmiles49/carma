@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -72,7 +73,7 @@ public class addParkingSpot extends HttpServlet {
         response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
         
-        int userID = 3, userCar = 3;
+        int userID = 0, userCar = 0, spotID = 0;
         String location = "";
         String GPSlocation = "";
         String timeSwap = "Now";
@@ -86,7 +87,7 @@ public class addParkingSpot extends HttpServlet {
 			level = (String) data.get("level");
 			//timeSwap = (String) data.get("timeSwap");
 			comment = (String) data.get("comment");
-			//addGPSLocation check here
+			GPSlocation = (String) data.get("latitude") + "," + data.get("longitude");
 			
 			//check cookie for user id and car id
 			Cookie[] cookies = request.getCookies();
@@ -105,7 +106,8 @@ public class addParkingSpot extends HttpServlet {
 			e.printStackTrace();
 		}
 		Connection c = null;
-		PreparedStatement insertSpot = null;
+		PreparedStatement insertSpot = null, findSpotId = null;
+		ResultSet spotID = null;
 	    try {
 	        c = DriverManager
 	                .getConnection( url, username, password );
@@ -115,7 +117,10 @@ public class addParkingSpot extends HttpServlet {
 	        
 	        insertSpot.setInt(1, userID);
 	        insertSpot.setInt(2, userCar);
-	        insertSpot.setString(3,  location + ", " + level);
+	        if(level.equals("default"))
+	        	insertSpot.setString(3, location);
+	        else
+	        	insertSpot.setString(3,  location + ", " + level);
 	        insertSpot.setString(4, GPSlocation);
 	        insertSpot.setString(5, (LocalDateTime.now().toString()));
 	        insertSpot.setString(6, timeSwap);
@@ -128,7 +133,8 @@ public class addParkingSpot extends HttpServlet {
 	    {
 	    	throw new ServletException( e );
 	    } finally {
-			//try { rs.close(); } catch (Exception e) { /* ignored */ }
+			try { spotID.close(); } catch (Exception e) { /* ignored */ }
+			try { findSpotId.close(); } catch (Exception e) { /* ignored */ }
 			try { insertSpot.close(); } catch (Exception e) { /* ignored */ }
 			try { c.close(); } catch (Exception e) { /* ignored */ }
 		}
