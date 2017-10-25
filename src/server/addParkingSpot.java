@@ -75,7 +75,8 @@ public class addParkingSpot extends HttpServlet {
         
         int userID = 0, userCar = 0, spotID = 0;
         String location = "";
-        String GPSlocation = "";
+        String GPSLat = "";
+        String GPSLong = "";
         String timeSwap = "Now";
         String comment = "";
         String level = "";
@@ -87,7 +88,8 @@ public class addParkingSpot extends HttpServlet {
 			level = (String) data.get("level");
 			//timeSwap = (String) data.get("timeSwap");
 			comment = (String) data.get("comment");
-			GPSlocation = (String) data.get("latitude") + "," + data.get("longitude");
+			GPSLat = (String) data.get("latitude");
+			GPSLong = (String) data.get("longitude");
 			
 			//check cookie for user id and car id
 			Cookie[] cookies = request.getCookies();
@@ -102,29 +104,31 @@ public class addParkingSpot extends HttpServlet {
 			}
 			
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Connection c = null;
 		PreparedStatement insertSpot = null, findSpotId = null;
-		ResultSet spotID = null;
+		ResultSet spotIDResults = null;
 	    try {
 	        c = DriverManager
 	                .getConnection( url, username, password );
 	        
 	        insertSpot = c.prepareStatement(
-	                "insert into Spots(Lister_ID, Lister_Car, Location, GPS_Location, Time_Listed, Time_Swap, Comment)  values(?,?,?,?,?,?,?)");
+	                "insert into Spots(Lister_ID, Lister_Car, Location, GPS_Lat, GPS_Long, Time_Listed, Time_Swap, Comment)  values(?,?,?,?,?,?,?,?)");
 	        
 	        insertSpot.setInt(1, userID);
 	        insertSpot.setInt(2, userCar);
+
 	        if(level.equals("default"))
 	        	insertSpot.setString(3, location);
 	        else
 	        	insertSpot.setString(3,  location + ", " + level);
-	        insertSpot.setString(4, GPSlocation);
-	        insertSpot.setString(5, (LocalDateTime.now().toString()));
-	        insertSpot.setString(6, timeSwap);
-	        insertSpot.setString(7, comment);
+	        insertSpot.setString(4, GPSLat);
+	        insertSpot.setString(5, GPSLat);
+
+	        insertSpot.setString(6, (LocalDateTime.now().toString()));
+	        insertSpot.setString(7, timeSwap);
+	        insertSpot.setString(8, comment);
 	        
 	        insertSpot.executeUpdate();
 	        
@@ -133,7 +137,7 @@ public class addParkingSpot extends HttpServlet {
 	    {
 	    	throw new ServletException( e );
 	    } finally {
-			try { spotID.close(); } catch (Exception e) { /* ignored */ }
+			try { spotIDResults.close(); } catch (Exception e) { /* ignored */ }
 			try { findSpotId.close(); } catch (Exception e) { /* ignored */ }
 			try { insertSpot.close(); } catch (Exception e) { /* ignored */ }
 			try { c.close(); } catch (Exception e) { /* ignored */ }

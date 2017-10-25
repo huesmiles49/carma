@@ -109,7 +109,7 @@ public class listParkingSpots extends HttpServlet {
 					}
 				}
 			}
-			//check paramaters for parking spot id
+			//check parameters for parking spot id
 			String spotParamter;
 			if((spotParamter = request.getParameter("id")) != null) {
 				spotID = Integer.parseInt(spotParamter);

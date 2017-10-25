@@ -27,14 +27,7 @@ import org.json.simple.parser.ParseException;
 @WebServlet("/registration")
 public class registration extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public registration() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
     
     public void init( ServletConfig config ) throws ServletException
     {
@@ -50,9 +43,7 @@ public class registration extends HttpServlet {
         }
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		Connection c = null;
@@ -64,7 +55,7 @@ public class registration extends HttpServlet {
             String username = "cs3337";
             String password = "csula2017";
             
-            String testFName = "John", testLName = "Doe", testEmail = "John.Doe@nowhere.com", testPass = "password";
+            String testFName = "John", testLName = "Doe", testEmail = "John.Doe@gmail.com", testPass = "0000";
             String testMake = "Honda", testModel="Civic", testColor = "Green", testLicense = "TooCool", testState = "CA";
             int Carma = 1000;
             
@@ -107,9 +98,7 @@ public class registration extends HttpServlet {
 		}
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         JSONParser parser = new JSONParser();
