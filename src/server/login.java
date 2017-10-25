@@ -23,13 +23,6 @@ import org.json.simple.parser.ParseException;
 public class login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public login() {
-		super();
-	}
-
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 

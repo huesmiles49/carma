@@ -12,7 +12,7 @@ public class matchReservationToSpot implements Runnable {
 
 	@Override
 	public void run() {
-		System.out.println("Background Match running");
+//		System.out.println("Background Match running");
 		Connection c = null;
 		PreparedStatement getActiveSpots = null;
 		PreparedStatement findWinner = null;
