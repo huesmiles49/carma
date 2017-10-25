@@ -17,7 +17,8 @@
 	<script src="js/jsonhandler.js"></script>
 	<script src="js/serverinterface.js"></script>
 	<script src="js/lister.js"></script>
-
+  
+	<script>window.onload=allowGPS();</script>
 	<title>Listing</title>
 </head>
 
@@ -52,7 +53,7 @@
 					<option value="LevelC">Level C</option>
 				</select>
 				<br/>
-				<textarea rows="4" onblur="geoFindMe();" cols="50" class="form-control" name="comment" placeholder="note"></textarea>
+				<textarea rows="4"  cols="50" class="form-control" name="comment" placeholder="note"></textarea>
 				
 			
 				<input type = "text" id = "latitude" name = "latitude"/>
