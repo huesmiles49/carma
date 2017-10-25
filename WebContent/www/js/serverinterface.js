@@ -71,3 +71,17 @@ function sendLister(parkingData) {
 	xhttp.withCredentials = true;
 	xhttp.send(parkingData);
 }
+
+function getMatch() {
+	var xhttp;
+	xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if (this.readyState === 4 && this.status === 200) {
+			console.log(this.responseText)
+			displayMatchLocation(this.responseText);
+		}
+	};
+	xhttp.withCredentials = true;
+	xhttp.open("GET", server + "/cs3337group3/match", true);
+	xhttp.send();
+}
