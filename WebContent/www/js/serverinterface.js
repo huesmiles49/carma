@@ -95,7 +95,6 @@ function sendMatchGPS(gpsLocation) {
 			var otherUserLocation = JSON.parse(this.responseText);
 			//callback: set the pin on the map from otherUserLocation.latitude and .longitude
 			// also checks for null value from otherUserLocation.latitude and .longitude
-
 		}
 	};
 	xhttp.withCredentials = true;

@@ -42,5 +42,5 @@ function geoFindMe(position) {
   // set pin for the current user
 
   // call the serverInterface:sendMatchGPS(converFormToJSON(currentUserLocation))
-  sendMatchGPS(converFormToJSON(currentUserLocation));
+  sendMatchGPS(convertFormToJSON(currentUserLocation));
 }

@@ -14,8 +14,6 @@ body {
 }
 
 h3 {
-	margin-left: auto;
-	margin-right: auto;
 	text-align: center;
 	font-family: 'Amatic SC', cursive;
     font-size: 50px;
@@ -26,5 +24,12 @@ h3 {
 	margin-right: auto;
 }
 
-// remove Google TOS watermark
-.gm-style-cc { display:none; }
+a[href^="http://maps.google.com/maps"]{display:none !important}
+a[href^="https://maps.google.com/maps"]{display:none !important}
+
+.gmnoprint a, .gmnoprint span, .gm-style-cc {
+    display:none;
+}
+.gmnoprint div {
+    background:none !important;
+}
