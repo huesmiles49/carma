@@ -1,0 +1,104 @@
+// This file will have all the connections needed to send/receive data from the server.
+
+// The server address, change this to the webserver you want to use
+var server = "http://localhost:8080";
+
+// Checks if server is OK, then request server for the JSON array of all parking spots
+function getList() {
+	var xhttp;
+	xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if (this.readyState === 4 && this.status === 200) {
+			console.log(this.responseText)
+			displayListOfSpots(this.responseText);
+		}
+	};
+	xhttp.withCredentials = true;
+	xhttp.open("GET", server + "/cs3337group3/listParkingSpots", true);
+	xhttp.send();
+}
+
+/**
+ * Send registration JSON to server with XMLHTTPRequest
+ * @param userData, the JSON to pass to the server
+ * @returns
+ * TODO: add a return function, maybe start tracking userID
+ */
+function sendRegistration(userData) {
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("POST", server + "/cs3337group3/registration", true);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	xhttp.onreadystatechange = function () {
+		if (this.readyState === 4 && this.status === 200) {
+			var user = JSON.parse(this.responseText);
+			document.cookie="ID=" + user.id + "; path=/";
+			document.cookie="CARID=" + user.car+ "; path=/";
+
+			window.location.href = "home.html";
+		}
+	};
+	xhttp.send(userData);
+}
+
+/**
+ * Send login JSON to server with XMLHTTPRequest
+ * @param userData, the JSON to pass to the server
+ * @returns
+ * TODO: add a return function, maybe start tracking userID
+ */
+function sendLogin(userData) {
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("POST", server + "/cs3337group3/login", true);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	xhttp.onreadystatechange = function () {
+		if (this.readyState === 4 && this.status === 200) {
+			console.log(this.responseText);
+			var user = JSON.parse(this.responseText);
+			document.cookie="ID=" + user.id+ "; path=/";
+			document.cookie="CARID=" + user.car+ "; path=/";
+
+			window.location.href = "home.html";
+			console.log("we here");
+		}
+	};
+	xhttp.send(userData);
+}
+
+function sendLister(parkingData) {
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("POST", server + "/cs3337group3/addParkingSpot", true);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	xhttp.withCredentials = true;
+	xhttp.send(parkingData);
+}
+
+function getMatch() {
+	var xhttp;
+	xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if (this.readyState === 4 && this.status === 200) {
+			console.log(this.responseText)
+			displayMatchLocation(this.responseText);
+		}
+	};
+	xhttp.withCredentials = true;
+	xhttp.open("GET", server + "/cs3337group3/match", true);
+	xhttp.send();
+}
+
+function sendMatchGPS(gpsLocation) {
+	var xhttp;
+	xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if (this.readyState === 4 && this.status === 200) {
+			console.log(this.responseText)
+			var otherUserLocation = JSON.parse(this.responseText);
+			//callback: set the pin on the map from otherUserLocation.latitude and .longitude
+			// also checks for null value from otherUserLocation.latitude and .longitude
+
+		}
+	};
+	xhttp.withCredentials = true;
+	xhttp.open("POST", server + "/cs3337group3/match", true);
+	xhttp.send(gpsLocation);
+}
