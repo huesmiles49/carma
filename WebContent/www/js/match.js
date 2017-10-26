@@ -4,7 +4,7 @@ var map, otherUserMarker, currentUserMarker, parkingSpotMarker;
 function map() {
   var displayMap = {
     center: new google.maps.LatLng(34.0678976, -118.1675802),
-    zoom: 15,
+    zoom: 17,
     fullscreenControl: false,
     mapTypeControl: false,
     streetViewControl: false,
@@ -70,7 +70,6 @@ function allowGPS() {
     icon: {
       path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
       strokeColor: "blue",
-      scale: 5
     },
     draggable: false,
     title: "Me"
@@ -86,7 +85,6 @@ function allowGPS() {
     icon: {
       path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
       strokeColor: "orange",
-      scale: 5
     },
     draggable: false,
     title: "Other User"

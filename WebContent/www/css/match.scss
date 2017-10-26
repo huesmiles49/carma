@@ -1,6 +1,5 @@
 body {
     background-color: white;
-    margin-top: 40px;
 }
 
 h2 {
@@ -12,23 +11,38 @@ h2 {
 }
 
 h4 {
-	font-family: 'Amatic SC', cursive;
+	font-family: 'Amatic SC', cursive, bold;
 	font-size: 35px;
 	margin-top: 20px;
 	margin-left: auto;
 	margin-right: auto;
-	padding: 0 0 0 0;
+	padding: 0 0 0 0.3cm;		/* padding: top right bottom left */
 
 }
 
 #map{
-	width: 700px;
-	height: 400px;
+	width: 100%;
+	height: 100%;
 	border-style:solid;
 	border-color: grey;
     display: block;
     margin-right: auto;
 	margin-left: auto;
+}
+
+.iframe-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; 	/* Ratio 16:9 ( 100%/16*9 = 56.25% ) */
+}
+
+.iframe-container > * {
+    display: block;
+    position: relative;
+    margin: 0;
+    padding: 0 10cm 0 10cm;
+    height: 100%;
+    width: 100%;
 }
 
 /* hide Google Maps logo */
