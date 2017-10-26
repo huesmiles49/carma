@@ -17,8 +17,16 @@
 	<script src="js/jsonhandler.js"></script>
 	<script src="js/serverinterface.js"></script>
 	<script src="js/lister.js"></script>
+	<script src="js/transition.js"></script>
   
-	<script>window.onload=allowGPS();</script>
+	<script>
+		function start() {
+			allowGPS();
+			getMaxMatch();
+		}
+		window.setInterval(checkWinner, 10000);
+		window.onload=start;
+	</script>
 	<title>Listing</title>
 </head>
 
