@@ -1,30 +1,43 @@
-#map{
-	width:300px;
-	height:250px;
-	border-style:solid;
-	border-color:black;
-    display: block;
-    margin-right: auto;
-	margin-left: auto;
-} 
-
 body {
     background-color: white;
     margin-top: 40px;
 }
 
-h3 {
-	margin-left: auto;
-	margin-right: auto;
+h2 {
 	text-align: center;
 	font-family: 'Amatic SC', cursive;
-    font-size: 50px;
+	font-size: 70px;
+	margin-top: 10px;
+	color: #27D455;
 }
 
-#avatar, #location, #level {
+h4 {
+	font-family: 'Amatic SC', cursive;
+	font-size: 35px;
+	margin-top: 20px;
 	margin-left: auto;
 	margin-right: auto;
+	padding: 0 0 0 0;
+
 }
 
-// remove Google TOS watermark
-.gm-style-cc { display:none; }
+#map{
+	width: 700px;
+	height: 400px;
+	border-style:solid;
+	border-color: grey;
+    display: block;
+    margin-right: auto;
+	margin-left: auto;
+}
+
+/* hide Google Maps logo */
+a[href^="http://maps.google.com/maps"]{display:none !important}
+a[href^="https://maps.google.com/maps"]{display:none !important}
+
+.gmnoprint a, .gmnoprint span, .gm-style-cc {
+    display:none;
+}
+.gmnoprint div {
+    background:none !important;
+}

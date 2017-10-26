@@ -12,15 +12,16 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous" type="text/javascript"></script>
     <link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
-    <script src="js/match.js"></script>
     <script src="js/serverinterface.js"></script>
+    <script src="js/jsonhandler.js"></script>
+    <script src="js/match.js"></script>
     <style type="text/css">
         @import "css/match.scss";
     </style>
     <script>
-        window.onload = function() {
-        		getMatch();
-        		allowGPS();
+        window.onload = function () {
+            getMatch();
+            allowGPS();
         };
     </script>
 
@@ -28,24 +29,20 @@
 </head>
 
 <body>
-    <h2>Match</h2>
+    <h2>Match!</h2>
 
     <div id="map">
-        Map goes here
+        Google Map
     </div>
 
-    <div class="container">
-        <img id="avatar" src="img/userIcon2x.png">
-        <h3 id="name"></h3>
-        <h3 id="location"></h3>
-        <h3 id="level"></h3>
-        <textarea id="comment" rows="4" cols="50" placeholder="note"></textarea>
-    </div>
-
-    <form id="currentUserLocation">
-        <input type = "text" id ="latitude" name ="latitude"/>
-        <input type = "text" id ="longitude" name ="longitude"/>
-    </form>
+        <div class="row">
+            <h4 align="center" id="name">Loading...</h4>
+            <h4 align="center" id="car">Loading...</h4>
+            <h4 align="center" id="location">Loading...</h4>
+                <!-- need to add level into JSON response -->
+            <h4 align="center" id="level">Loading...    </h4>
+            <h4 align="center" id="comment">Loading...</h4>
+        </div>
 
     <!-- google map api -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4ObZuEAUjzIuqNfPg8939f1ozoY0SqgE&callback=map"></script>
