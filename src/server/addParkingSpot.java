@@ -70,9 +70,14 @@ public class addParkingSpot extends HttpServlet {
         String username = "cs3337";
         String password = "csula2017";
         
+        //return in response
+        int insertedSpotID = -1;
+        JSONObject results = new JSONObject();
         response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
         
+		
+		//input from response
         int userID = 0, userCar = 0, spotID = -1;
         String location = "";
         String GPSLat = "";
@@ -111,42 +116,99 @@ public class addParkingSpot extends HttpServlet {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		Connection c = null;
-		PreparedStatement insertSpot = null, findSpotId = null;
-		ResultSet spotIDResults = null;
-	    try {
-	        c = DriverManager
-	                .getConnection( url, username, password );
-	        
-	        insertSpot = c.prepareStatement(
-	                "insert into Spots(Lister_ID, Lister_Car, Location, GPS_Lat, GPS_Long, Time_Listed, Time_Swap, Comment)  values(?,?,?,?,?,?,?,?)");
-	        
-	        insertSpot.setInt(1, userID);
-	        insertSpot.setInt(2, userCar);
-
-	        if(level.equals("default"))
-	        	insertSpot.setString(3, location);
-	        else
-	        	insertSpot.setString(3,  location + ", " + level);
-	        insertSpot.setString(4, GPSLat);
-	        insertSpot.setString(5, GPSLat);
-
-	        insertSpot.setString(6, (LocalDateTime.now().toString()));
-	        insertSpot.setString(7, timeSwap);
-	        insertSpot.setString(8, comment);
-	        
-	        insertSpot.executeUpdate();
-	        
-	    }
-	    catch( SQLException e )
-	    {
-	    	throw new ServletException( e );
-	    } finally {
-			try { spotIDResults.close(); } catch (Exception e) { /* ignored */ }
-			try { findSpotId.close(); } catch (Exception e) { /* ignored */ }
-			try { insertSpot.close(); } catch (Exception e) { /* ignored */ }
-			try { c.close(); } catch (Exception e) { /* ignored */ }
-		}
+        
+        //first run, didn't get a spotID from the request
+        if(spotID == -1) {
+			Connection c = null;
+			PreparedStatement insertSpot = null, findSpotId = null;
+			ResultSet spotIDResults = null;
+			
+		    try {
+		        c = DriverManager
+		                .getConnection( url, username, password );
+		        
+		        insertSpot = c.prepareStatement(
+		                "insert into Spots(Lister_ID, Lister_Car, Location, GPS_Lat, GPS_Long, Time_Listed, Time_Swap, Comment)  values(?,?,?,?,?,?,?,?)");
+		        
+		        insertSpot.setInt(1, userID);
+		        insertSpot.setInt(2, userCar);
+	
+		        if(level.equals("default"))
+		        	insertSpot.setString(3, location);
+		        else
+		        	insertSpot.setString(3,  location + ", " + level);
+		        insertSpot.setString(4, GPSLat);
+		        insertSpot.setString(5, GPSLong);
+	
+		        insertSpot.setString(6, (LocalDateTime.now().toString()));
+		        insertSpot.setString(7, timeSwap);
+		        insertSpot.setString(8, comment);
+		        
+		        insertSpot.executeUpdate();
+		        
+		        //find the id just created for that spot
+		        findSpotId= c.prepareStatement(
+		        		"select max(ID) from Spots where Lister_ID=?");
+		        
+		        findSpotId.setInt(1, userID);
+		        
+		        spotIDResults = findSpotId.executeQuery();
+		        
+		        if(spotIDResults.next()) {
+		        	insertedSpotID = spotIDResults.getInt("max(ID)");
+		        }
+		    }
+		    catch( SQLException e )
+		    {
+		    	throw new ServletException( e );
+		    } finally {
+				try { spotIDResults.close(); } catch (Exception e) { /* ignored */ }
+				try { findSpotId.close(); } catch (Exception e) { /* ignored */ }
+				try { insertSpot.close(); } catch (Exception e) { /* ignored */ }
+				try { c.close(); } catch (Exception e) { /* ignored */ }
+			}
+		    
+		    //return results
+		    
+		    //sanity check, cant be equal to -1 (didnt get set) and cant be equal to 0 cus thats SQL null
+		    if(insertedSpotID != -1 && insertedSpotID != 0) {
+		    	results.put("spotID", insertedSpotID);
+		    	out.println(results.toJSONString());
+		    }
+        } else {
+        	//doUpdate pretty much
+        	Connection c = null;
+			PreparedStatement updateSpot = null;
+			
+			try {
+				c = DriverManager
+		                .getConnection( url, username, password );
+		        
+				updateSpot = c.prepareStatement(
+						"update Spots set Location=?, GPS_Lat=?, GPS_Long=?, Commet=? where ID=?");
+				
+				if(level.equals("default"))
+					updateSpot.setString(1, location);
+		        else
+		        	updateSpot.setString(1,  location + ", " + level);
+				updateSpot.setString(2, GPSLat);
+				updateSpot.setString(3, GPSLong);
+				updateSpot.setString(4, comment);
+				updateSpot.setInt(5, spotID);
+		        
+				updateSpot.executeUpdate();
+				
+			}catch( SQLException e )
+		    {
+		    	throw new ServletException( e );
+		    } finally {
+				try { updateSpot.close(); } catch (Exception e) { /* ignored */ }
+				try { c.close(); } catch (Exception e) { /* ignored */ }
+			}
+			//resend spotID? /shrug idk why not
+			results.put("spotID", spotID);
+			out.println(results.toJSONString());
+        }
 	}
 	
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
