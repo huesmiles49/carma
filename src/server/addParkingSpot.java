@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -69,10 +70,15 @@ public class addParkingSpot extends HttpServlet {
         String username = "cs3337";
         String password = "csula2017";
         
+        //return in response
+        int insertedSpotID = -1;
+        JSONObject results = new JSONObject();
         response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
         
-        int userID = 3, userCar = 3;
+		
+		//input from response
+        int userID = 0, userCar = 0, spotID = -1;
         String location = "";
         String GPSLat = "";
         String GPSLong = "";
@@ -87,7 +93,13 @@ public class addParkingSpot extends HttpServlet {
 			level = (String) data.get("level");
 			//timeSwap = (String) data.get("timeSwap");
 			comment = (String) data.get("comment");
+			GPSLat = (String) data.get("latitude");
+			GPSLong = (String) data.get("longitude");
 			
+			//TODO: double check json for spotID
+			String temp = (String) data.get("spotId");
+			if(temp !=null && !temp.isEmpty())
+				spotID = Integer.parseInt(temp);
 			
 			//check cookie for user id and car id
 			Cookie[] cookies = request.getCookies();
@@ -102,37 +114,160 @@ public class addParkingSpot extends HttpServlet {
 			}
 			
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Connection c = null;
-		PreparedStatement insertSpot = null;
+        
+        //first run, didn't get a spotID from the request
+        if(spotID == -1) {
+			Connection c = null;
+			PreparedStatement insertSpot = null, findSpotId = null;
+			ResultSet spotIDResults = null;
+			
+		    try {
+		        c = DriverManager
+		                .getConnection( url, username, password );
+		        
+		        insertSpot = c.prepareStatement(
+		                "insert into Spots(Lister_ID, Lister_Car, Location, GPS_Lat, GPS_Long, Time_Listed, Time_Swap, Comment)  values(?,?,?,?,?,?,?,?)");
+		        
+		        insertSpot.setInt(1, userID);
+		        insertSpot.setInt(2, userCar);
+	
+		        if(level.equals("default"))
+		        	insertSpot.setString(3, location);
+		        else
+		        	insertSpot.setString(3,  location + ", " + level);
+		        insertSpot.setString(4, GPSLat);
+		        insertSpot.setString(5, GPSLong);
+	
+		        insertSpot.setString(6, (LocalDateTime.now().toString()));
+		        insertSpot.setString(7, timeSwap);
+		        insertSpot.setString(8, comment);
+		        
+		        insertSpot.executeUpdate();
+		        
+		        //find the id just created for that spot
+		        findSpotId= c.prepareStatement(
+		        		"select max(ID) from Spots where Lister_ID=?");
+		        
+		        findSpotId.setInt(1, userID);
+		        
+		        spotIDResults = findSpotId.executeQuery();
+		        
+		        if(spotIDResults.next()) {
+		        	insertedSpotID = spotIDResults.getInt("max(ID)");
+		        }
+		    }
+		    catch( SQLException e )
+		    {
+		    	throw new ServletException( e );
+		    } finally {
+				try { spotIDResults.close(); } catch (Exception e) { /* ignored */ }
+				try { findSpotId.close(); } catch (Exception e) { /* ignored */ }
+				try { insertSpot.close(); } catch (Exception e) { /* ignored */ }
+				try { c.close(); } catch (Exception e) { /* ignored */ }
+			}
+		    
+		    //return results
+		    
+		    //sanity check, cant be equal to -1 (didnt get set) and cant be equal to 0 cus thats SQL null
+		    if(insertedSpotID != -1 && insertedSpotID != 0) {
+		    	results.put("spotID", insertedSpotID);
+		    	out.println(results.toJSONString());
+		    }
+        } else {
+        	//doUpdate pretty much
+        	Connection c = null;
+			PreparedStatement updateSpot = null;
+			
+			try {
+				c = DriverManager
+		                .getConnection( url, username, password );
+		        
+				updateSpot = c.prepareStatement(
+						"update Spots set Location=?, GPS_Lat=?, GPS_Long=?, Commet=? where ID=?");
+				
+				if(level.equals("default"))
+					updateSpot.setString(1, location);
+		        else
+		        	updateSpot.setString(1,  location + ", " + level);
+				updateSpot.setString(2, GPSLat);
+				updateSpot.setString(3, GPSLong);
+				updateSpot.setString(4, comment);
+				updateSpot.setInt(5, spotID);
+		        
+				updateSpot.executeUpdate();
+				
+			}catch( SQLException e )
+		    {
+		    	throw new ServletException( e );
+		    } finally {
+				try { updateSpot.close(); } catch (Exception e) { /* ignored */ }
+				try { c.close(); } catch (Exception e) { /* ignored */ }
+			}
+			//resend spotID? /shrug idk why not
+			results.put("spotID", spotID);
+			out.println(results.toJSONString());
+        }
+	}
+	
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		JSONParser parser = new JSONParser();
+        
+        String url = "jdbc:mysql://localhost/cs3337group3";
+        String username = "cs3337";
+        String password = "csula2017";
+        
+        response.setContentType("application/json");
+		PrintWriter out = response.getWriter();
+        
+        int spotID = -1;
+        int result = -1;
+        JSONObject resultJSON = new JSONObject();
+        
+        try {
+        	JSONObject data = (JSONObject) parser.parse(request.getReader());
+        	//TODO: double check json for spotID
+			String temp = (String) data.get("spotId");
+			if(temp !=null && !temp.isEmpty())
+				spotID = Integer.parseInt(temp);
+			else { //no spotid so do nothing, something bad happened
+				resultJSON.put("result", result);
+				out.println(resultJSON.toJSONString());
+				return;
+			}
+        } catch (ParseException e) {
+			e.printStackTrace();
+		}
+        
+        Connection c = null;
+		PreparedStatement deleteSpot = null;
 	    try {
 	        c = DriverManager
 	                .getConnection( url, username, password );
 	        
-	        insertSpot = c.prepareStatement(
-	                "insert into Spots(Lister_ID, Lister_Car, Location, GPS_Location, Time_Listed, Time_Swap, Comment)  values(?,?,?,?,?,?,?)");
+	        deleteSpot = c.prepareStatement(
+	                "delete from Spots where ID=?");
 	        
-	        insertSpot.setInt(1, userID);
-	        insertSpot.setInt(2, userCar);
-	        insertSpot.setString(3,  location + ", " + level);
-//	        insertSpot.setString(4, GPSlocation);
-	        insertSpot.setString(5, (LocalDateTime.now().toString()));
-	        insertSpot.setString(6, timeSwap);
-	        insertSpot.setString(7, comment);
-	        
-	        insertSpot.executeUpdate();
+	        deleteSpot.setInt(1, spotID);
+	               
+	        //returns 1 if a row got deleted, 0 otherwise
+	        result = deleteSpot.executeUpdate();
 	        
 	    }
 	    catch( SQLException e )
 	    {
 	    	throw new ServletException( e );
 	    } finally {
-			//try { rs.close(); } catch (Exception e) { /* ignored */ }
-			try { insertSpot.close(); } catch (Exception e) { /* ignored */ }
+			try { deleteSpot.close(); } catch (Exception e) { /* ignored */ }
 			try { c.close(); } catch (Exception e) { /* ignored */ }
 		}
+	    
+	    //on return make sure result == 1
+	    resultJSON.put("result", result);
+		out.println(resultJSON.toJSONString());
+	    
 	}
+	
 }
 

@@ -16,11 +16,17 @@
     <link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
     <script src="js/reserver.js"></script>
     <script src="js/serverinterface.js"></script>
+    <script src="js/transition.js"></script>
     <link rel="stylesheet" href="css/reserver.css">
     <script>
-        window.onload = getList;
+	    function start() {
+	    	getList();
+	    	getMaxMatch();
+	    }
+        window.setInterval(checkWinner, 10000);
+        window.onload = start;
+        
     </script>
-
     <title>Reserver</title>
 </head>
 

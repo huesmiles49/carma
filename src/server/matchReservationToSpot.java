@@ -43,6 +43,10 @@ public class matchReservationToSpot implements Runnable {
 			while (activeSpotsResults.next()) {
 				int spotID = activeSpotsResults.getInt("ID");
 				
+				//sanity check result of 0 == sql null (very bad design imo)
+				if(spotID == 0)
+					continue;
+				
 				LocalDateTime spotTime = LocalDateTime.parse(activeSpotsResults.getString("Time_Listed"));
 				LocalDateTime currentTime = LocalDateTime.now();
 				
@@ -52,6 +56,11 @@ public class matchReservationToSpot implements Runnable {
 					
 					if(winnerResults.next()) {
 						int winnerID = winnerResults.getInt("ID");
+						
+						//sanity check result of 0 == sql null (very bad design imo)
+						if(winnerID == 0)
+							continue;
+						
 						insertSwap.setInt(1, spotID);
 						insertSwap.setInt(2, spotID);
 						insertSwap.setInt(3, winnerID);

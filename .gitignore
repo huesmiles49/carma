@@ -8,11 +8,16 @@
 !src/
 !src/**
 
+!WebContent
+!WebContent/
+!WebContent/www
+!WebContent/www/
 !WebContent/www/**
-!WEB-INF/web.xml
+!WebContent/WEB-INF/web.xml
 
 !*.txt
 !*.md
 
 # MAC HIDDEN FILES
 .DS_Store
+
