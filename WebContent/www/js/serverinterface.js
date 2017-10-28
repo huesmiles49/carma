@@ -75,7 +75,6 @@ function sendLister(parkingData) {
 			console.log(this.responseText);
 			var setNum = JSON.parse(this.responseText);
 			document.getElementById("spotID").value = setNum.spotID;
-			document.getElementById("newSpotID").value = setNum.spotID;
 		}
 	}
 	xhttp.send(parkingData);
