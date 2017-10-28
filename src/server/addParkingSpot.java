@@ -97,7 +97,7 @@ public class addParkingSpot extends HttpServlet {
 			GPSLong = (String) data.get("longitude");
 			
 			//TODO: double check json for spotID
-			String temp = (String) data.get("spotId");
+			String temp = (String) data.get("spotID");
 			if(temp !=null && !temp.isEmpty())
 				spotID = Integer.parseInt(temp);
 			
@@ -155,7 +155,8 @@ public class addParkingSpot extends HttpServlet {
 		        spotIDResults = findSpotId.executeQuery();
 		        
 		        if(spotIDResults.next()) {
-		        	insertedSpotID = spotIDResults.getInt("max(ID)");
+		        	insertedSpotID = spotIDResults.getInt(1);
+		        	
 		        }
 		    }
 		    catch( SQLException e )
@@ -169,10 +170,11 @@ public class addParkingSpot extends HttpServlet {
 			}
 		    
 		    //return results
-		    
+		    System.out.println(insertedSpotID);
 		    //sanity check, cant be equal to -1 (didnt get set) and cant be equal to 0 cus thats SQL null
 		    if(insertedSpotID != -1 && insertedSpotID != 0) {
 		    	results.put("spotID", insertedSpotID);
+		    	System.out.println(results.toJSONString());
 		    	out.println(results.toJSONString());
 		    }
         } else {
@@ -185,7 +187,7 @@ public class addParkingSpot extends HttpServlet {
 		                .getConnection( url, username, password );
 		        
 				updateSpot = c.prepareStatement(
-						"update Spots set Location=?, GPS_Lat=?, GPS_Long=?, Commet=? where ID=?");
+						"update Spots set Location=?, GPS_Lat=?, GPS_Long=?, Comment=? where ID=?");
 				
 				if(level.equals("default"))
 					updateSpot.setString(1, location);
@@ -228,7 +230,7 @@ public class addParkingSpot extends HttpServlet {
         try {
         	JSONObject data = (JSONObject) parser.parse(request.getReader());
         	//TODO: double check json for spotID
-			String temp = (String) data.get("spotId");
+			String temp = (String) data.get("spotID");
 			if(temp !=null && !temp.isEmpty())
 				spotID = Integer.parseInt(temp);
 			else { //no spotid so do nothing, something bad happened

@@ -69,7 +69,25 @@ function sendLister(parkingData) {
 	xhttp.open("POST", server + "/cs3337group3/addParkingSpot", true);
 	xhttp.setRequestHeader("Content-type", "application/json");
 	xhttp.withCredentials = true;
+	xhttp.onreadystatechange = function () {
+		console.log("in callback");
+		if(this.readyState === 4 && this.status === 200) {
+			console.log(this.responseText);
+			var setNum = JSON.parse(this.responseText);
+			document.getElementById("spotID").value = setNum.spotID;
+			document.getElementById("newSpotID").value = setNum.spotID;
+		}
+	}
 	xhttp.send(parkingData);
+}
+
+function deleteLister(parkingData){
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("DELETE", server + "/cs3337group3/addParkingSpot", true);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	xhttp.withCredentials = true;
+	xhttp.send(parkingData);
+	window.location.href = "home.html";
 }
 
 function getMatch() {
