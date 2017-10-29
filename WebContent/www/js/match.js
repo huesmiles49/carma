@@ -47,10 +47,10 @@ function displayMatchLocation(matchUser) {
     icon: {
       url: "img/car.svg",
       scaledSize: {
-        height: 70,
+        height: 60,
         width: 55
       },
-      size: new google.maps.Size(70, 55)
+      size: new google.maps.Size(60, 55)
        },
     title: "Car"
   });
@@ -72,10 +72,11 @@ function allowGPS() {
     icon: {
       url: "img/user1.svg",
       scaledSize: {
-        height: 70,
+        height: 60,
         width: 55
       },
-      size: new google.maps.Size(70, 55)
+      size: new google.maps.Size(60, 55),
+      optimized: false
        },
     title: "Me"
   });
@@ -90,10 +91,11 @@ function allowGPS() {
     icon: {
       url: "img/user2.svg",
       scaledSize: {
-        height: 70,
+        height: 60,
         width: 55
       },
-      size: new google.maps.Size(70, 55)
+      size: new google.maps.Size(60, 55),
+      optimized: false
        },
     title: "Other User"
   });
@@ -134,6 +136,4 @@ function otherUserPin(lat, long) {
     //  And increase the bounds to take this point
     bounds.extend(centerMap[i]);
   }
-  //  fit these bounds to the map
-  map.fitBounds(bounds);
 }
