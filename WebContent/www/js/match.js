@@ -45,11 +45,13 @@ function displayMatchLocation(matchUser) {
     position: parkingSpotLatLong,
     map: map,
     icon: {
-      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-      strokeColor: "purple",
-      scale: 5
-    },
-    draggable: false,
+      url: "img/car.svg",
+      scaledSize: {
+        height: 70,
+        width: 55
+      },
+      size: new google.maps.Size(70, 55)
+       },
     title: "Car"
   });
 
@@ -68,10 +70,13 @@ function allowGPS() {
     },
     map: map,
     icon: {
-      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-      strokeColor: "blue",
-    },
-    draggable: false,
+      url: "img/user1.svg",
+      scaledSize: {
+        height: 70,
+        width: 55
+      },
+      size: new google.maps.Size(70, 55)
+       },
     title: "Me"
   });
 
@@ -83,10 +88,13 @@ function allowGPS() {
     },
     map: map,
     icon: {
-      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-      strokeColor: "orange",
-    },
-    draggable: false,
+      url: "img/user2.svg",
+      scaledSize: {
+        height: 70,
+        width: 55
+      },
+      size: new google.maps.Size(70, 55)
+       },
     title: "Other User"
   });
 
