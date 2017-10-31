@@ -14,6 +14,11 @@ public class matchReservationToSpot implements Runnable {
 	public void run() {
 //		System.out.println("Background Match running");
 		Connection c = null;
+
+		//test*******
+		PreparedStatement getListerLocation = null;
+		PreparedStatement getReserverLocation = null;
+		//***********
 		PreparedStatement getActiveSpots = null;
 		PreparedStatement findWinner = null;
 		PreparedStatement insertSwap = null;
@@ -29,6 +34,12 @@ public class matchReservationToSpot implements Runnable {
 			
 			c = DriverManager.getConnection(url, username, password);
 			
+			
+			/*Modified*/
+			getReserverLocation = c.prepareStatement("select ID, GPS_Lat, GPS_Long from Reservations");
+			getListerLocation = c.prepareStatement("select ID, GPS_Lat, GPS_Long from Spots");
+			/* * * * * */
+			
 			getActiveSpots = c.prepareStatement(
 					"select ID, Time_Listed from Spots where ID not in (select Spot_ID from Matches)");
 
@@ -42,6 +53,12 @@ public class matchReservationToSpot implements Runnable {
 
 			while (activeSpotsResults.next()) {
 				int spotID = activeSpotsResults.getInt("ID");
+				//***
+				int reserverID = activeSpotsResults.getInt("ID");
+				int lat = activeSpotsResults.getInt("ID");
+				int lng = activeSpotsResults.getInt("ID");
+				//***
+				
 				
 				//sanity check result of 0 == sql null (very bad design imo)
 				if(spotID == 0)

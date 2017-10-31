@@ -37,5 +37,4 @@ public class backgroundMatcher implements ServletContextListener {
         scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(new matchReservationToSpot(), 0, 10, TimeUnit.SECONDS);
     }
-	
 }
