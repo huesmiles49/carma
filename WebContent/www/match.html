@@ -11,7 +11,7 @@
         crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous" type="text/javascript"></script>
-    <link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC:700" rel="stylesheet">
     <script src="js/serverinterface.js"></script>
     <script src="js/jsonhandler.js"></script>
     <script src="js/match.js"></script>
@@ -31,20 +31,18 @@
 <body>
     <h2>Match!</h2>
 
-    <div id="map">
-        Google Map
-    </div>
+    <div class="iframe-container" id="map">Loading...</div>
 
         <div class="row">
             <h4 align="center" id="name">Loading...</h4>
             <h4 align="center" id="car">Loading...</h4>
             <h4 align="center" id="location">Loading...</h4>
                 <!-- need to add level into JSON response -->
-            <h4 align="center" id="level">Loading...    </h4>
+            <h4 align="center" id="level">Loading...</h4>
             <h4 align="center" id="comment">Loading...</h4>
         </div>
 
-    <!-- google map api -->
+    <!-- Google Maps API -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4ObZuEAUjzIuqNfPg8939f1ozoY0SqgE&callback=map"></script>
 
 </body>

@@ -4,7 +4,7 @@ var map, otherUserMarker, currentUserMarker, parkingSpotMarker;
 function map() {
   var displayMap = {
     center: new google.maps.LatLng(34.0678976, -118.1675802),
-    zoom: 15,
+    zoom: 17,
     fullscreenControl: false,
     mapTypeControl: false,
     streetViewControl: false,
@@ -45,11 +45,13 @@ function displayMatchLocation(matchUser) {
     position: parkingSpotLatLong,
     map: map,
     icon: {
-      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-      strokeColor: "purple",
-      scale: 5
-    },
-    draggable: false,
+      url: "img/car.svg",
+      scaledSize: {
+        height: 60,
+        width: 55
+      },
+      size: new google.maps.Size(60, 55)
+       },
     title: "Car"
   });
 
@@ -68,11 +70,14 @@ function allowGPS() {
     },
     map: map,
     icon: {
-      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-      strokeColor: "blue",
-      scale: 5
-    },
-    draggable: false,
+      url: "img/user1.svg",
+      scaledSize: {
+        height: 60,
+        width: 55
+      },
+      size: new google.maps.Size(60, 55),
+      optimized: false
+       },
     title: "Me"
   });
 
@@ -84,11 +89,14 @@ function allowGPS() {
     },
     map: map,
     icon: {
-      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-      strokeColor: "orange",
-      scale: 5
-    },
-    draggable: false,
+      url: "img/user2.svg",
+      scaledSize: {
+        height: 60,
+        width: 55
+      },
+      size: new google.maps.Size(60, 55),
+      optimized: false
+       },
     title: "Other User"
   });
 
@@ -128,6 +136,4 @@ function otherUserPin(lat, long) {
     //  And increase the bounds to take this point
     bounds.extend(centerMap[i]);
   }
-  //  fit these bounds to the map
-  map.fitBounds(bounds);
 }
