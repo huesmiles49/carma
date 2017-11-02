@@ -64,9 +64,10 @@
 				<textarea rows="4"  cols="50" class="form-control" name="comment" placeholder="note"></textarea>
 				
 			
-				<input type = "text" id = "latitude" name = "latitude"/>
-				<input type = "text" id = "longitude" name = "longitude"/>
-				
+				<input type = "hidden" id = "latitude" name = "latitude"/>
+				<input type = "hidden" id = "longitude" name = "longitude"/>
+				<input type = "hidden" id = "spotID" name = "spotID"  value=""/>	
+							
 
 				<!-- Submit button, Goes to second part of lister view when clicked and sends data to server -->
 				<a id="submit" class="btn btn-primary btn-block" onclick="showListerViewPart2(); sendLister(convertFormToJSON('lister-form'));">Submit</a>
@@ -84,11 +85,11 @@
 				<h2>Thank You For Registering Your Spot!</h2>
 				<p>You will be notified when someone has agreed to an exchange.</p>
 			
-				<!-- Goes back to first part of list view, does it delete database when clicked -->
+				<!-- Goes back to first part of list view -->
 				<a id="edit" class="btn btn-primary btn-block" onclick="showListerViewPart1()">Edit</a>
 
-				<!-- what happens when you click cancel, delete database -->
-				<a id="delete" class="btn btn-primary btn-block" onclick="showThirdPage()">Delete</a>
+				<!-- delete spot out of database -->
+				<a id="delete" class="btn btn-primary btn-block" onclick="deleteLister(convertFormToJSON('lister-form'));">Delete</a>
 			</div>
 		</form>
 	</div>
