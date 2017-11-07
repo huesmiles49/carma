@@ -36,8 +36,8 @@ public class matchReservationToSpot implements Runnable {
 			
 			
 			/*Modified*/
-			getReserverLocation = c.prepareStatement("select ID, GPS_Lat, GPS_Long from Reservations");
-			getListerLocation = c.prepareStatement("select ID, GPS_Lat, GPS_Long from Spots");
+			getReserverLocation = c.prepareStatement("select ID, Reservations.GPS_Lat, Reservations.GPS_Long, Spots.GPS_Lat, Spots.GPS_Long from Reservations inner join Spots on Reservations.ID = Spots.ID");
+			//getListerLocation = c.prepareStatement("select ID, GPS_Lat, GPS_Long from Spots");
 			/* * * * * */
 			
 			getActiveSpots = c.prepareStatement(
@@ -68,9 +68,20 @@ public class matchReservationToSpot implements Runnable {
 				LocalDateTime currentTime = LocalDateTime.now();
 				
 				if(ChronoUnit.SECONDS.between(spotTime, currentTime) >= 60) {
+					//findWinner.setInt(1, spotID);
+					//winnerResults = findWinner.executeQuery();
 					findWinner.setInt(1, spotID);
-					winnerResults = findWinner.executeQuery();
+					winnerResults = getReserverLocation.executeQuery(); 
 					
+					//find distance
+					DistanceBetweenUsers distance = new DistanceBetweenUsers();
+					double miles = distance.distanceInMiles(
+							winnerResults.getString("Reservations.GPS_Long"), 
+							winnerResults.getString("Reservations.GPS_Lat"), 
+							winnerResults.getString("Spots.GPS_Long"), 
+							winnerResults.getString("Spots.GPS_Lat"));
+					
+
 					if(winnerResults.next()) {
 						int winnerID = winnerResults.getInt("ID");
 						
