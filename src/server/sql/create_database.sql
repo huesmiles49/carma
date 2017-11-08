@@ -92,7 +92,7 @@ create table Reviews(
    foreign key(Swap_ID) references Matches(ID)
 );
 
-insert into Users(FName,LName,Email,Pass,Carma) values ("John","Doe", "John@Doe.com", "abcd", 1000);
+insert into Users(FName,LName,Email,Pass,Carma) values ("John","Doe", "John@Doe.com", "abcd", 2000);
 insert into Users(FName,LName,Email,Pass,Carma) values ("Jane","Doe", "Jane@Doe.com", "efgh", 1000);
 
 insert into Users_Cars(User_ID,Make,Model,Color,License_Plate,Plate_State) values ((Select ID from Users where Email="John@Doe.com"),"Ford","Focus","White","7GTH876","CA");
@@ -105,7 +105,4 @@ insert into Reservations(Spot_ID,Reserver_ID,Reserver_Car, GPS_Lat, GPS_Long) va
 insert into Reservations(Spot_ID,Reserver_ID,Reserver_Car, GPS_Lat, GPS_Long) values ((Select ID from Spots where Lister_ID=(Select ID from Users where Email="Jane@Doe.com")),(Select ID from Users where Email="John@Doe.com"),(Select ID from Users_Cars where User_ID=(Select ID from Users where Email="John@Doe.com")),"34.071260","-118.166478");
 insert into Matches(Spot_ID,Reservations_ID) values ((Select ID from Spots where Lister_ID=(Select ID from Users where Email="John@Doe.com")),(Select ID from Reservations where Reserver_ID=(Select ID from Users where Email="Jane@Doe.com")));
 insert into Matches(Spot_ID,Reservations_ID) values ((Select ID from Spots where Lister_ID=(Select ID from Users where Email="Jane@Doe.com")),(Select ID from Reservations where Reserver_ID=(Select ID from Users where Email="John@Doe.com")));
-
-
-select Reservations.GPS_Lat, Reservations.GPS_Long, Spots.GPS_Lat, Spots.GPS_Long from Reservations inner join Spots on Reservations.ID = Spots.ID
 

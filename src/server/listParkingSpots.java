@@ -114,6 +114,17 @@ public class listParkingSpots extends HttpServlet {
 			if((spotParamter = request.getParameter("id")) != null) {
 				spotID = Integer.parseInt(spotParamter);
 			}
+			
+			
+			// lat / long
+			String GPS_Lat = "";
+			GPS_Lat = request.getParameter("GPS_Lat");
+			System.out.println(GPS_Lat);
+			
+			String GPS_Long = "";
+			GPS_Long = request.getParameter("GPS_Long");
+			System.out.println(GPS_Long);
+
 	
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();
@@ -121,7 +132,7 @@ public class listParkingSpots extends HttpServlet {
 			c = DriverManager.getConnection(url, username, password);
 	
 			insertReservation = c.prepareStatement(
-					"insert into Reservations(Spot_ID,Reserver_ID,Reserver_Car) values (?, ?, ?)");
+					"insert into Reservations(Spot_ID,Reserver_ID,Reserver_Car, GPS_Lat, GPS_Long) values (?, ?, ?, ?, ?)");
 			System.out.println(userID);
 			System.out.println(userCar);
 			System.out.println(spotID);
@@ -129,6 +140,8 @@ public class listParkingSpots extends HttpServlet {
 			insertReservation.setInt(1, spotID);
 		    insertReservation.setInt(2, userID);
 		    insertReservation.setInt(3, userCar);
+		    insertReservation.setString(4, GPS_Lat);
+		    insertReservation.setString(5, GPS_Long);
 		    
 		    insertReservation.executeUpdate();
 			
