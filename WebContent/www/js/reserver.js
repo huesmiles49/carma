@@ -28,7 +28,7 @@ function displayListOfSpots(spots) {
         $('tr').click(function () {
             console.log(this);
             // jQuery method will directly pass JSON to server
-            $.post("http://localhost:8080/cs3337group3/listParkingSpots", {
+            $.post("http://localhost:8080/cs3337stu08/listParkingSpots", {
                 id: this.id,
             });
             console.log("Sending id#: " + this.id + " to server.");

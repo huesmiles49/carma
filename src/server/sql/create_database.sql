@@ -53,7 +53,8 @@ create table Reservations(
    primary key(ID),
    foreign key(Spot_ID) references Spots(ID),
    foreign key(Reserver_ID) references Users(ID),
-   foreign key(Reserver_Car) references Users_Cars(ID)
+   foreign key(Reserver_Car) references Users_Cars(ID),
+   unique (Spot_ID,Reserver_ID)
 );
 
 create table Matches(
