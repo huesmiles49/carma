@@ -103,6 +103,23 @@ function getMatch() {
 	xhttp.send();
 }
 
+function sendReservation(spotID) {
+	var xhttp;
+	xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if (this.readyState === 4 && this.status === 200) {
+			var row = document.getElementById(spotID);
+			row.classList.add("reserved");
+			row.removeAttribute("onclick");
+		}
+	};
+	xhttp.withCredentials = true;
+	xhttp.open("POST", server + "/listParkingSpots?id=" + spotID, true);
+	xhttp.send();
+	
+	
+}
+
 function sendMatchGPS(gpsLocation) {
 	var xhttp;
 	xhttp = new XMLHttpRequest();

@@ -66,7 +66,7 @@ public class listParkingSpots extends HttpServlet {
 
 			c = DriverManager.getConnection(url, username, password);
 
-			getSpots = c.prepareStatement("select ID,Location,Time_Swap,Comment,if(ID in (select Spot_ID from Reservations where Reserver_ID = ?), 'true', 'false') as Reserved  from Spots where id not in (select Spot_ID from Matches)");
+			getSpots = c.prepareStatement("select ID,Location,Time_Swap,Comment,if(ID in (select Spot_ID from Reservations where Reserver_ID = ?), 'true', 'false') as Reserved from Spots where id not in (select Spot_ID from Matches)");
 
 			getSpots.setInt(1, userID);
 			

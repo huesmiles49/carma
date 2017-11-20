@@ -8,3 +8,11 @@ h2 {
     font-family: 'Amatic SC', cursive;
     font-size: 50px;
 }
+
+tr.reserved {
+	background-color: rgb(187, 247, 174);	
+}
+
+.table-hover > tbody > tr.reserved:hover {
+	background-color: rgb(187, 247, 174);
+}
