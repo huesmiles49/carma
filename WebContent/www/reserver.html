@@ -15,18 +15,22 @@
         crossorigin="anonymous" type="text/javascript"></script>
     <link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
     <script src="js/reserver.js"></script>
+    <script src="js/lister.js"></script>
     <script src="js/serverinterface.js"></script>
     <script src="js/transition.js"></script>
     <link rel="stylesheet" href="css/reserver.css">
     <script>
 	    function start() {
-	    	getList();
-	    	getMaxMatch();
+	    		allowGPS();
+	    		getList();
+	    		getMaxMatch();
+	    		sendLister(convertFormToJSON('reserver-form'));
 	    }
         window.setInterval(checkWinner, 10000);
         window.onload = start;
-        
     </script>
+	
+
     <title>Reserver</title>
 </head>
 
@@ -47,6 +51,14 @@
             </table>
         </div>
     </div>
+    
+    <div style="display: none">
+    		<form id="reserver-form">
+    			<input type = "text" id = "latitude" name = "latitude"/>
+			<input type = "text" id = "longitude" name = "longitude"/>
+		</form>
+	</div>
+				
 </body>
 
 </html>

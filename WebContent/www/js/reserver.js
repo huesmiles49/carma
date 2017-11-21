@@ -30,8 +30,11 @@ function displayListOfSpots(spots) {
             // jQuery method will directly pass JSON to server
             $.post("http://localhost:8080/cs3337group3/listParkingSpots", {
                 id: this.id,
-            });
+                GPS_Lat: document.getElementById("latitude").value,
+                GPS_Long: document.getElementById("longitude").value,
+            });      
             console.log("Sending id#: " + this.id + " to server.");
+            console.log("Sending gps#: " + document.getElementById("latitude").value + ", " + document.getElementById("longitude").value + " to server.");          
             // Change the color of the row clicked
             $(this).css("background-color", "rgb(187, 247, 174)");
             // Disable further clicks

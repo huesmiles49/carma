@@ -14,12 +14,19 @@ public class matchReservationToSpot implements Runnable {
 	public void run() {
 //		System.out.println("Background Match running");
 		Connection c = null;
+
+		//test*******
+		PreparedStatement getListerLocation = null;
+		PreparedStatement getReserverLocation = null;
+		//***********
 		PreparedStatement getActiveSpots = null;
 		PreparedStatement findWinner = null;
 		PreparedStatement insertSwap = null;
 		ResultSet activeSpotsResults = null;
 		ResultSet winnerResults = null;
+		ResultSet reserverLocations = null;
 
+		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			
@@ -29,11 +36,14 @@ public class matchReservationToSpot implements Runnable {
 			
 			c = DriverManager.getConnection(url, username, password);
 			
+			
+			getReserverLocation = c.prepareStatement("select GPS_Lat, GPS_Long from Reservations where Spot_ID = ? and Reserver_ID = ?");
+			
 			getActiveSpots = c.prepareStatement(
-					"select ID, Time_Listed from Spots where ID not in (select Spot_ID from Matches)");
-
+					"select ID, Time_Listed, GPS_Lat, GPS_Long from Spots where ID not in (select Spot_ID from Matches)");
+			
 			findWinner = c.prepareStatement(
-					"select max(Carma),ID from Users where ID In (Select Reserver_ID from Reservations where Spot_ID = ?)");
+					"select Carma, ID from Users where ID In (Select Reserver_ID from Reservations where Spot_ID = ?)");
 			
 			insertSwap = c.prepareStatement(
 					"Insert into Matches(Spot_ID, Reservations_ID) values (?, (select ID from Reservations where Spot_ID = ? && Reserver_ID = ?))");
@@ -42,6 +52,8 @@ public class matchReservationToSpot implements Runnable {
 
 			while (activeSpotsResults.next()) {
 				int spotID = activeSpotsResults.getInt("ID");
+				String spotLat = activeSpotsResults.getString("GPS_Lat");
+				String spotLong = activeSpotsResults.getString("GPS_Long");
 				
 				//sanity check result of 0 == sql null (very bad design imo)
 				if(spotID == 0)
@@ -51,22 +63,63 @@ public class matchReservationToSpot implements Runnable {
 				LocalDateTime currentTime = LocalDateTime.now();
 				
 				if(ChronoUnit.SECONDS.between(spotTime, currentTime) >= 60) {
-					findWinner.setInt(1, spotID);
-					winnerResults = findWinner.executeQuery();
+					//findWinner.setInt(1, spotID);
+					//winnerResults = findWinner.executeQuery();
 					
-					if(winnerResults.next()) {
-						int winnerID = winnerResults.getInt("ID");
+					findWinner.setInt(1, spotID);
+					
+					winnerResults = findWinner.executeQuery(); 
+					double miles = 0;
+					double maxRank = 0;
+					int maxUser = -1;
+					
+					while(winnerResults.next()) {
 						
-						//sanity check result of 0 == sql null (very bad design imo)
-						if(winnerID == 0)
+						int reserverID = winnerResults.getInt("ID");
+						
+						if(reserverID == 0) {
 							continue;
+						}
 						
-						insertSwap.setInt(1, spotID);
-						insertSwap.setInt(2, spotID);
-						insertSwap.setInt(3, winnerID);
+						getReserverLocation.setInt(1, spotID);
+						getReserverLocation.setInt(2, reserverID);
+						reserverLocations = getReserverLocation.executeQuery();
 						
-						insertSwap.executeUpdate();
+						if(reserverLocations.next()) {
+						
+							//find distance
+							DistanceBetweenUsers distance = new DistanceBetweenUsers();
+							miles = distance.distanceInMiles(
+									reserverLocations.getString("GPS_Long"), 
+									reserverLocations.getString("GPS_Lat"), 
+									spotLong, 
+									spotLat);
+							System.out.println("miles: " + miles);
+
+							int carmaOfCurrentUser = winnerResults.getInt("Carma");
+							
+							//determine winner based on rank
+							double rank = carmaOfCurrentUser / miles;
+							System.out.println("rank: " + rank);
+							
+							if(rank > maxRank) {
+								maxRank = rank;
+								maxUser = winnerResults.getInt("ID");
+							}
+							
+						}
+						
 					}
+					
+					if(maxUser == -1) {
+						continue;
+					}
+					
+					insertSwap.setInt(1, spotID);
+					insertSwap.setInt(2, spotID);
+					insertSwap.setInt(3, maxUser);
+					
+					insertSwap.executeUpdate();
 				}
 				
 			}
