@@ -1,7 +1,7 @@
 // This file will have all the connections needed to send/receive data from the server.
 
 // The server address, change this to the webserver you want to use
-var server = "http://localhost:8080";
+var server = "http://localhost:8080/cs3337stu08";
 
 // Checks if server is OK, then request server for the JSON array of all parking spots
 function getList() {
@@ -14,7 +14,7 @@ function getList() {
 		}
 	};
 	xhttp.withCredentials = true;
-	xhttp.open("GET", server + "/cs3337group3/listParkingSpots", true);
+	xhttp.open("GET", server + "/listParkingSpots", true);
 	xhttp.send();
 }
 
@@ -26,7 +26,7 @@ function getList() {
  */
 function sendRegistration(userData) {
 	var xhttp = new XMLHttpRequest();
-	xhttp.open("POST", server + "/cs3337group3/registration", true);
+	xhttp.open("POST", server + "/registration", true);
 	xhttp.setRequestHeader("Content-type", "application/json");
 	xhttp.onreadystatechange = function () {
 		if (this.readyState === 4 && this.status === 200) {
@@ -48,7 +48,7 @@ function sendRegistration(userData) {
  */
 function sendLogin(userData) {
 	var xhttp = new XMLHttpRequest();
-	xhttp.open("POST", server + "/cs3337group3/login", true);
+	xhttp.open("POST", server + "/login", true);
 	xhttp.setRequestHeader("Content-type", "application/json");
 	xhttp.onreadystatechange = function () {
 		if (this.readyState === 4 && this.status === 200) {
@@ -66,7 +66,7 @@ function sendLogin(userData) {
 
 function sendLister(parkingData) {
 	var xhttp = new XMLHttpRequest();
-	xhttp.open("POST", server + "/cs3337group3/addParkingSpot", true);
+	xhttp.open("POST", server + "/addParkingSpot", true);
 	xhttp.setRequestHeader("Content-type", "application/json");
 	xhttp.withCredentials = true;
 	xhttp.onreadystatechange = function () {
@@ -82,7 +82,7 @@ function sendLister(parkingData) {
 
 function deleteLister(parkingData){
 	var xhttp = new XMLHttpRequest();
-	xhttp.open("DELETE", server + "/cs3337group3/addParkingSpot", true);
+	xhttp.open("DELETE", server + "/addParkingSpot", true);
 	xhttp.setRequestHeader("Content-type", "application/json");
 	xhttp.withCredentials = true;
 	xhttp.send(parkingData);
@@ -99,8 +99,25 @@ function getMatch() {
 		}
 	};
 	xhttp.withCredentials = true;
-	xhttp.open("GET", server + "/cs3337group3/match", true);
+	xhttp.open("GET", server + "/match", true);
 	xhttp.send();
+}
+
+function sendReservation(spotID) {
+	var xhttp;
+	xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if (this.readyState === 4 && this.status === 200) {
+			var row = document.getElementById(spotID);
+			row.classList.add("reserved");
+			row.removeAttribute("onclick");
+		}
+	};
+	xhttp.withCredentials = true;
+	xhttp.open("POST", server + "/listParkingSpots?id=" + spotID, true);
+	xhttp.send();
+	
+	
 }
 
 function sendMatchGPS(gpsLocation) {
@@ -116,7 +133,7 @@ function sendMatchGPS(gpsLocation) {
 		}
 	};
 	xhttp.withCredentials = true;
-	xhttp.open("POST", server + "/cs3337group3/match", true);
+	xhttp.open("POST", server + "/match", true);
 	xhttp.send(gpsLocation);
 }
 
@@ -131,7 +148,7 @@ function getMaxMatch() {
 		}
 	};
 	xhttp.withCredentials = true;
-	xhttp.open("GET", server + "/cs3337group3/transition", true);
+	xhttp.open("GET", server + "/transition", true);
 	xhttp.send();
 }
 
@@ -145,6 +162,6 @@ function checkWinner() {
 		}
 	};
 	xhttp.withCredentials = true;
-	xhttp.open("POST", server + "/cs3337group3/transition", true);
+	xhttp.open("POST", server + "/transition", true);
 	xhttp.send();
 }
